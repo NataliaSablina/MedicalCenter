@@ -5,30 +5,50 @@ from django.core.mail import send_mail, BadHeaderError
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.views import View
+from rest_framework import status
+from rest_framework.generics import CreateAPIView
+from rest_framework.response import Response
 
 from medical_center import settings
 from .forms import RegistrationForm, AuthenticationForm, HelpUserForm
 from .models import MyUser
+from .serializers import RegistrationSerializer
 
 
-class UserRegistrationView(View):
-    def get(self, request):
-        registration_form = RegistrationForm()
-        context = {
-            'form': registration_form,
-        }
-        return render(request, 'user/registration_form.html', context)
+class RegistrationAPIView(CreateAPIView):
+    queryset = MyUser.objects.all()
+    serializer_class = RegistrationSerializer
 
-    def post(self, request):
-        registration_form = RegistrationForm(request.POST)
-        if registration_form.is_valid():
-            user = registration_form.save()
-            login(request, user)
-            return redirect('user_page', user.email)
+    def post(self, request, *args, **kwargs):
+        serializer = RegistrationSerializer(data=request.data)
+        data = {}
+        if serializer.is_valid():
+            serializer.save()
+            data['response'] = serializer.data
+            return Response(data, status=status.HTTP_200_OK)
         else:
-            for field, errors in registration_form.errors.items():
-                messages.error(request, errors)
-            return redirect('registration')
+            data = serializer.errors
+            return Response(data)
+
+    # Добавляем права доступа
+# class UserRegistrationView(View):
+#     def get(self, request):
+#         registration_form = RegistrationForm()
+#         context = {
+#             'form': registration_form,
+#         }
+#         return render(request, 'user/registration_form.html', context)
+#
+#     def post(self, request):
+#         registration_form = RegistrationForm(request.POST)
+#         if registration_form.is_valid():
+#             user = registration_form.save()
+#             login(request, user)
+#             return redirect('user_page', user.email)
+#         else:
+#             for field, errors in registration_form.errors.items():
+#                 messages.error(request, errors)
+#             return redirect('registration')
 
 
 class UserAuthenticationView(View):
