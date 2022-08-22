@@ -5,7 +5,7 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.viewsets import GenericViewSet
-
+from rest_framework.permissions import IsAdminUser
 from doctors.models import DoctorsCategory
 from doctors.serializers import DoctorsCategorySerializer
 
@@ -16,20 +16,26 @@ class DoctorsCategoriesViewSet(mixins.CreateModelMixin,
                    mixins.DestroyModelMixin,
                    mixins.ListModelMixin,
                    GenericViewSet):
-    queryset = DoctorsCategory.objects.all()
+    # queryset = DoctorsCategory.objects.all()
     serializer_class = DoctorsCategorySerializer
     # permission_classes =  [IsAUthenticatedOnly]
 
     def get_queryset(self):
         pk = self.kwargs.get("pk")
         if not pk:
-            return DoctorsCategory.objects.all()[:2]
+            return DoctorsCategory.objects.all()
         return DoctorsCategory.objects.filter(pk=pk)
 
     @action(methods=['get'], detail=False)
     def category(self, request):
         cats = DoctorsCategory.objects.all()
         return Response({'cats': [c.name for c in cats]})
+
+
+class CreateDoctorCategory(generics.CreateAPIView):
+    queryset = DoctorsCategory.objects.all()
+    serializer_class = DoctorsCategorySerializer
+    permission_classes = [IsAdminUser, ]
 
 # class DoctorsCategoriesListAPIView(generics.ListCreateAPIView):
 #     queryset = DoctorsCategory.objects.all()
