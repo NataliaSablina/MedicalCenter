@@ -20,8 +20,6 @@ class Medicament(models.Model):
     title = models.CharField(verbose_name='title', max_length=250)
     instruction = models.TextField(verbose_name='instruction')
     brief_instruction = models.TextField(verbose_name='instruction')
-    price = MoneyField(max_digits=14, decimal_places=2, default_currency='USD')
-    seller = models.ForeignKey(Seller, on_delete=models.CASCADE, verbose_name="seller")
     category = models.ForeignKey(MedicamentCategory, on_delete=models.CASCADE, verbose_name="seller")
 
     class Meta:
@@ -45,6 +43,21 @@ class CommentMedicament(models.Model):
 
     def __str__(self):
         return self.pk, self.content[:20]
+
+
+class MedicamentSellerRelations(models.Model):
+    price = MoneyField(max_digits=14, decimal_places=2, default_currency='USD')
+    seller = models.ForeignKey(Seller, on_delete=models.CASCADE, verbose_name="seller")
+    medicament = models.ForeignKey(Medicament, on_delete=models.CASCADE, verbose_name="medicament")
+
+    class Meta:
+        verbose_name = 'MedicamentSellerRelations'
+        verbose_name_plural = 'MedicamentSellerRelations'
+        db_table = 'MedicamentSellerRelations'
+
+    def __str__(self):
+        return self.pk, self.price
+
 
 
 
