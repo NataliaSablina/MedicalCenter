@@ -25,9 +25,9 @@ class Medicament(models.Model):
     category = models.ForeignKey(MedicamentCategory, on_delete=models.CASCADE, verbose_name="seller")
 
     class Meta:
-        verbose_name = "Seller"
-        verbose_name_plural = 'Sellers'
-        db_table = "Sellers"
+        verbose_name = "Medicament"
+        verbose_name_plural = 'Medicaments'
+        db_table = "Medicament"
 
     def __str__(self):
         return self.title, self.seller
