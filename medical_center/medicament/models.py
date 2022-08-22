@@ -1,0 +1,50 @@
+from django.db import models
+from seller.models import Seller
+from user.models import MyUser
+from djmoney.models.fields import MoneyField
+
+
+class MedicamentCategory(models.Model):
+    title = models.CharField(verbose_name='title', max_length=250)
+
+    class Meta:
+        verbose_name = "MedicamentCategory"
+        verbose_name_plural = 'MedicamentCategory'
+        db_table = "MedicamentCategories"
+
+    def __str__(self):
+        return self.title
+
+
+class Medicament(models.Model):
+    title = models.CharField(verbose_name='title', max_length=250)
+    instruction = models.TextField(verbose_name='instruction')
+    brief_instruction = models.TextField(verbose_name='instruction')
+    price = MoneyField(max_digits=14, decimal_places=2, default_currency='USD')
+    seller = models.ForeignKey(Seller, on_delete=models.CASCADE, verbose_name="seller")
+    category = models.ForeignKey(MedicamentCategory, on_delete=models.CASCADE, verbose_name="seller")
+
+    class Meta:
+        verbose_name = "Seller"
+        verbose_name_plural = 'Sellers'
+        db_table = "Sellers"
+
+    def __str__(self):
+        return self.title, self.seller
+
+
+class CommentMedicament(models.Model):
+    user = models.ForeignKey(MyUser, on_delete=models.SET_NULL, verbose_name='user', null=True)
+    content = models.TextField(verbose_name='content')
+    creation_date = models.DateField(verbose_name='creation_date', auto_now_add=True, auto_now=False)
+
+    class Meta:
+        verbose_name = "CommentMedicament"
+        verbose_name_plural = 'CommentsMedicament'
+        db_table = "CommentMedicament"
+
+    def __str__(self):
+        return self.pk, self.content[:20]
+
+
+

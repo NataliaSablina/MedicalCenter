@@ -1,9 +1,6 @@
-import django
 from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
 from django.core.validators import RegexValidator
 from django.db import models
-from django.utils import timezone
-
 from user.utils import sex_control
 
 phone_regex = RegexValidator(regex=r'^\+?1?\d{9,15}$',
@@ -45,14 +42,14 @@ class MyUserManager(BaseUserManager):
 
 
 class MyUser(AbstractBaseUser):
-    first_name = models.CharField(max_length=30, verbose_name='Name')
-    second_name = models.CharField(max_length=30, verbose_name='Surname')
-    phone_number = models.CharField(validators=[phone_regex], max_length=17, verbose_name="Phone Number", null=True)
-    date_of_birth = models.DateField(verbose_name="Date Of Birth", null=True)
-    sex = models.CharField(max_length=10, verbose_name="Sex", null=True)
-    creation_date = models.DateTimeField(auto_now_add=True, auto_now=False, verbose_name="Time of creation", blank=True,
+    first_name = models.CharField(max_length=30, verbose_name='name')
+    second_name = models.CharField(max_length=30, verbose_name='surname')
+    phone_number = models.CharField(validators=[phone_regex], max_length=17, verbose_name="phone_number", null=True)
+    date_of_birth = models.DateField(verbose_name="birthday", null=True)
+    sex = models.CharField(max_length=10, verbose_name="sex", null=True)
+    creation_date = models.DateTimeField(auto_now_add=True, auto_now=False, verbose_name="creation_time", blank=True,
                                          null=True)
-    photo = models.ImageField(upload_to='photos/%Y/%m/%d/', null=True, blank=True, verbose_name="Photo")
+    photo = models.ImageField(upload_to='photos/%Y/%m/%d/', null=True, blank=True, verbose_name="photo")
     email = models.EmailField(verbose_name='Email', unique=True)
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
@@ -82,8 +79,6 @@ class MyUser(AbstractBaseUser):
 
     @property
     def is_staff(self):
-        "Is the user a member of staff?"
-        # Simplest possible answer: All admins are staff
         return self.is_admin
 
 
