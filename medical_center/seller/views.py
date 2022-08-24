@@ -8,9 +8,9 @@ class SellerListAPIView(generics.ListAPIView):
     serializer_class = SellerSerializer
 
     def get_queryset(self):
-        pk = self.kwargs.get("pk", None)
-        if not pk:
+        email = self.kwargs.get("email", None)
+        if not email:
             return Seller.objects.all()
-        return Seller.objects.filter(pk=pk)
+        return Seller.objects.filter(user__email=email)
 
 

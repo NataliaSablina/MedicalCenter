@@ -13,7 +13,7 @@ class MedicamentCategory(models.Model):
         db_table = "MedicamentCategories"
 
     def __str__(self):
-        return self.title
+        return f"{self.title}, {self.pk}"
 
 
 class Medicament(models.Model):
@@ -29,6 +29,7 @@ class Medicament(models.Model):
 
     def __str__(self):
         return self.title
+
 
 class CommentMedicament(models.Model):
     user = models.ForeignKey(MyUser, on_delete=models.SET_NULL, verbose_name='user', null=True)
@@ -46,7 +47,7 @@ class CommentMedicament(models.Model):
 
 class MedicamentSellerRelations(models.Model):
     price = MoneyField(max_digits=14, decimal_places=2, default_currency='USD')
-    seller = models.ForeignKey(Seller, on_delete=models.CASCADE, verbose_name="seller")
+    seller = models.ForeignKey(Seller, on_delete=models.CASCADE, verbose_name="seller", related_name="seller_relations")
     medicament = models.ForeignKey(Medicament, on_delete=models.CASCADE, verbose_name="medicament")
 
     class Meta:
@@ -55,8 +56,4 @@ class MedicamentSellerRelations(models.Model):
         db_table = 'MedicamentSellerRelations'
 
     def __str__(self):
-        return self.pk, self.price
-
-
-
-
+        return f"{self.medicament.title}, {self.seller.user.first_name}, {self.price}"

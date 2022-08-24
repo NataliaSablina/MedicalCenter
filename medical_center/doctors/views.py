@@ -37,18 +37,18 @@ class CurrentCategoryDoctorListAPIView(generics.ListAPIView):
     serializer_class = DoctorSerializer
 
     def get_queryset(self):
-        pk = self.kwargs.get("pk")
-        print(pk)
-        print(Doctor.objects.filter(category__id=pk))
-        return Doctor.objects.filter(category__id=pk)
+        name = self.kwargs.get("name")
+        print(name)
+        print(Doctor.objects.filter(category__name=name))
+        return Doctor.objects.filter(category__name=name)
 
 
 class CurrentDoctorListAPIView(generics.ListAPIView):
     serializer_class = DoctorSerializer
 
     def get_queryset(self):
-        pk = self.kwargs.get("pk")
-        return Doctor.objects.filter(pk=pk)
+        email = self.kwargs.get("email")
+        return Doctor.objects.filter(user__email=email)
 
 
 
