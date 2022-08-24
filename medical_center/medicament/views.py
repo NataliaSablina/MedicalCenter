@@ -4,13 +4,14 @@ from rest_framework.permissions import IsAdminUser
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from medicament.models import MedicamentCategory
-from medicament.serializers import MedicamentCategorySerializer, MedicamentCategoryModelSerializer
+from medicament.models import MedicamentCategory, Medicament
+from medicament.serializers import MedicamentCategorySerializer, MedicamentCategoryModelSerializer, \
+    MedicamentModelSerializer
 
 
 class MedicamentCategoryListView(APIView):
     def get(self, request):
-        categories = MedicamentCategory.objects.all()
+        categories = MedicamentCategory.objects.all().values('id', 'title')
         return Response({'categories': MedicamentCategorySerializer(categories, many=True).data})
 
 
@@ -50,4 +51,12 @@ class MedicamentCategoryView(APIView):
             return Response({"error: object doesn't exists"})
         instance.delete()
         return Response(data={'dlete':f'{pk} was deleted'}, status=status.HTTP_200_OK)
+
+
+class CurrentCategoryMedicamentListAPIView(generics.ListAPIView):
+    serializer_class = MedicamentModelSerializer
+
+    def get_queryset(self):
+        pk = self.kwargs.get("pk")
+        return Medicament.objects.filter(category__id=pk)
 

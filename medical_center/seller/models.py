@@ -14,5 +14,5 @@ class Seller(models.Model):
         db_table = "Seller"
 
     def __str__(self):
-        return self.email
+        return self.user.email
 

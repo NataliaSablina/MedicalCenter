@@ -1,14 +1,9 @@
 from rest_framework import serializers
-from doctors.models import DoctorsCategory, Doctor
+
+from seller.models import Seller
 
 
-class DoctorsCategorySerializer(serializers.ModelSerializer):
-    class Meta:
-        model = DoctorsCategory
-        fields = "__all__"
-
-
-class DoctorSerializer(serializers.ModelSerializer):
+class SellerSerializer(serializers.ModelSerializer):
     first_name = serializers.SerializerMethodField()
     second_name = serializers.SerializerMethodField()
     phone_number = serializers.SerializerMethodField()
@@ -17,7 +12,7 @@ class DoctorSerializer(serializers.ModelSerializer):
     email = serializers.SerializerMethodField()
 
     class Meta:
-        model = Doctor
+        model = Seller
         fields = '__all__'
 
     def get_first_name(self, instance):
@@ -37,16 +32,3 @@ class DoctorSerializer(serializers.ModelSerializer):
 
     def get_sex(self, instance):
         return instance.user.sex
-
-
-# class DoctorsCategorySerializer(serializers.Serializer):
-#     name = serializers.CharField()
-#
-#     def create(self, validated_data):
-#         return DoctorsCategory.objects.create(**validated_data)
-#
-#     def update(self, instance, validated_data):
-#         instance.name = validated_data.get("name", instance.name)
-#         instance.save()
-#         return instance
-

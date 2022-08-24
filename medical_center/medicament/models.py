@@ -19,8 +19,8 @@ class MedicamentCategory(models.Model):
 class Medicament(models.Model):
     title = models.CharField(verbose_name='title', max_length=250)
     instruction = models.TextField(verbose_name='instruction')
-    brief_instruction = models.TextField(verbose_name='instruction')
-    category = models.ForeignKey(MedicamentCategory, on_delete=models.CASCADE, verbose_name="seller")
+    brief_instruction = models.TextField(verbose_name='brief_instruction')
+    category = models.ForeignKey(MedicamentCategory, on_delete=models.CASCADE, verbose_name="category")
 
     class Meta:
         verbose_name = "Medicament"
@@ -28,8 +28,7 @@ class Medicament(models.Model):
         db_table = "Medicament"
 
     def __str__(self):
-        return self.title, self.seller
-
+        return self.title
 
 class CommentMedicament(models.Model):
     user = models.ForeignKey(MyUser, on_delete=models.SET_NULL, verbose_name='user', null=True)

@@ -16,7 +16,7 @@ class DoctorsCategory(models.Model):
 
 class Doctor(models.Model):
     user = models.OneToOneField(MyUser, on_delete=models.CASCADE, verbose_name='user')
-    category_id = models.ForeignKey(DoctorsCategory, on_delete=models.CASCADE, verbose_name='category')
+    category = models.ForeignKey(DoctorsCategory, on_delete=models.CASCADE, verbose_name='category')
     work_experience = models.CharField(verbose_name='work_experience', max_length=250)
     education = models.CharField(verbose_name='education', max_length=250, default="BSU")
     age = models.IntegerField(verbose_name='age', default=30)
@@ -28,7 +28,7 @@ class Doctor(models.Model):
         db_table = "Doctors"
 
     def __str__(self):
-        return self.email
+        return self.user.email
 
 
 class CommentDoctor(models.Model):

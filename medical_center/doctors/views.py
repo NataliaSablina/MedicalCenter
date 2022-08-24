@@ -6,8 +6,8 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.viewsets import GenericViewSet
 from rest_framework.permissions import IsAdminUser
-from doctors.models import DoctorsCategory
-from doctors.serializers import DoctorsCategorySerializer
+from doctors.models import DoctorsCategory, Doctor
+from doctors.serializers import DoctorsCategorySerializer, DoctorSerializer
 
 
 class DoctorsCategoriesListAPIView(generics.ListCreateAPIView):
@@ -31,6 +31,24 @@ class DoctorsCategoriesDestroyAPIView(generics.RetrieveDestroyAPIView):
 class DoctorsCategoriesAPIView(generics.ListAPIView):
     queryset = DoctorsCategory.objects.all()
     serializer_class = DoctorsCategorySerializer
+
+
+class CurrentCategoryDoctorListAPIView(generics.ListAPIView):
+    serializer_class = DoctorSerializer
+
+    def get_queryset(self):
+        pk = self.kwargs.get("pk")
+        print(pk)
+        print(Doctor.objects.filter(category__id=pk))
+        return Doctor.objects.filter(category__id=pk)
+
+
+class CurrentDoctorListAPIView(generics.ListAPIView):
+    serializer_class = DoctorSerializer
+
+    def get_queryset(self):
+        pk = self.kwargs.get("pk")
+        return Doctor.objects.filter(pk=pk)
 
 
 
