@@ -3,13 +3,13 @@ from django.core.mail import send_mail, BadHeaderError
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.views import View
-from rest_framework import status
+from rest_framework import status, generics
 from rest_framework.generics import CreateAPIView
 from rest_framework.response import Response
 from medical_center import settings
 from .forms import HelpUserForm
 from .models import MyUser
-from .serializers import RegistrationSerializer
+from .serializers import RegistrationSerializer, UserSerializer
 
 
 class RegistrationAPIView(CreateAPIView):
@@ -26,6 +26,14 @@ class RegistrationAPIView(CreateAPIView):
         else:
             data = serializer.errors
             return Response(data)
+
+
+class UserPageAPIView(generics.ListAPIView):
+    serializer_class = UserSerializer
+
+    def get_queryset(self):
+        email = self.kwargs.get("email")
+        return MyUser.objects.filter(email=email)
 
 
 class UserPageView(View):

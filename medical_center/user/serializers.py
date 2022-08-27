@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from doctors.models import Doctor
 from user.models import MyUser
 
 
@@ -28,3 +29,10 @@ class RegistrationSerializer(serializers.ModelSerializer):
         user.set_password(password1)
         user.save()
         return user
+
+
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = MyUser
+        fields = '__all__'
+

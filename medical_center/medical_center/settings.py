@@ -12,11 +12,13 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 import os
 from pathlib import Path
 from dotenv import load_dotenv
+
+import medical_center
+
 load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
@@ -28,7 +30,7 @@ SECRET_KEY = 'django-insecure-ps4ygl-y2cj+k=ffjz3esp-jus6nxk39pk_b*%qy*in&-$mgew
 DEBUG = True
 
 ALLOWED_HOSTS = []
-
+# DJANGO_SETTINGS_MODULE = medical_center.settings
 
 # Application definition
 
@@ -49,7 +51,6 @@ INSTALLED_APPS = [
     'medicament',
     'timetable'
 ]
-
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -80,7 +81,6 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'medical_center.wsgi.application'
-
 
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
@@ -122,7 +122,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/4.0/topics/i18n/
 
@@ -163,6 +162,7 @@ EMAIL_PORT = os.getenv('EMAIL_PORT')
 EMAIL_FILE_PATH = str(BASE_DIR.joinpath('sent_emails'))
 
 REST_FRAMEWORK = {
+    # 'TEST_REQUEST_DEFAULT_FORMAT': 'json',
     'DEFAULT_RENDERER_CLASSES': [
         'rest_framework.renderers.JSONRenderer',
         'rest_framework.renderers.BrowsableAPIRenderer',

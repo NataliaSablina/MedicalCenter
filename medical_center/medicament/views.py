@@ -12,7 +12,8 @@ from medicament.serializers import MedicamentCategorySerializer, MedicamentCateg
 class MedicamentCategoryListView(APIView):
     def get(self, request):
         categories = MedicamentCategory.objects.all().values('id', 'title')
-        return Response({'categories': MedicamentCategorySerializer(categories, many=True).data})
+        # return Response({'categories': MedicamentCategorySerializer(categories, many=True).data})
+        return Response(MedicamentCategorySerializer(categories, many=True).data)
 
 
 class MedicamentCategoryView(APIView):
@@ -58,6 +59,7 @@ class CurrentCategoryMedicamentListAPIView(generics.ListAPIView):
 
     def get_queryset(self):
         title = self.kwargs.get("title")
+        print(MedicamentSellerRelations.objects.filter(medicament__category__title=title))
         return MedicamentSellerRelations.objects.filter(medicament__category__title=title)
 
 

@@ -3,6 +3,8 @@
 import os
 import sys
 
+from medical_center import settings
+
 
 def main():
     """Run administrative tasks."""
@@ -18,5 +20,6 @@ def main():
     execute_from_command_line(sys.argv)
 
 
-if __name__ == '__main__':
+main()
+if __name__ == "__main__":
     main()
