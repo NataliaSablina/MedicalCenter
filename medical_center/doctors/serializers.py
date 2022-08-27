@@ -18,7 +18,7 @@ class DoctorSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Doctor
-        fields = '__all__'
+        fields = "__all__"
 
     def get_first_name(self, instance):
         return instance.user.first_name
@@ -49,4 +49,3 @@ class DoctorSerializer(serializers.ModelSerializer):
 #         instance.name = validated_data.get("name", instance.name)
 #         instance.save()
 #         return instance
-

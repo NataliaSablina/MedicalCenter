@@ -21,11 +21,13 @@ class RegistrationAPIView(CreateAPIView):
         data = {}
         if serializer.is_valid():
             serializer.save()
-            data['response'] = serializer.data
-            return Response(data, status=status.HTTP_200_OK)
+            data["response"] = serializer.data
+            return Response(data, status=status.HTTP_201_CREATED)
         else:
             data = serializer.errors
-            return Response(data)
+            print("FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFf")
+            print(data)
+            return Response(data, status=status.HTTP_201_CREATED)
 
 
 class UserPageAPIView(generics.ListAPIView):
@@ -36,39 +38,45 @@ class UserPageAPIView(generics.ListAPIView):
         return MyUser.objects.filter(email=email)
 
 
-class UserPageView(View):
-    def get(self, request, email):
-        user = MyUser.objects.get(email=email)
-        context = {
-            'user': user,
-        }
-        return render(request, 'user/user_page.html', context)
-
-
-class HelpUserView(LoginRequiredMixin, View):
-    login_url = 'authentication'
-
-    def get(self, request):
-        help_user_form = HelpUserForm()
-        context = {
-            "form": help_user_form,
-        }
-        return render(request, "user/help_user_form.html", context)
-
-    def post(self, request):
-        help_user_form = HelpUserForm(request.POST)
-        if help_user_form.is_valid():
-            subject = "Help for client"
-            from_email = help_user_form.cleaned_data["email"]
-            message = help_user_form.cleaned_data["message"]
-            if from_email == request.user.email:
-                try:
-                    send_mail(subject, message, from_email, [settings.EMAIL_HOST_USER], fail_silently=False)
-                    messages.error(request, 'Mail is sent successful')
-                except BadHeaderError:
-                    messages.error(request, 'Send email wrong')
-                    return redirect('help')
-                return redirect('home_page')
-            else:
-                messages.error(request, 'Your email is wrong')
-        return redirect('help')
+# class UserPageView(View):
+#     def get(self, request, email):
+#         user = MyUser.objects.get(email=email)
+#         context = {
+#             "user": user,
+#         }
+#         return render(request, "user/user_page.html", context)
+#
+#
+# class HelpUserView(LoginRequiredMixin, View):
+#     login_url = "authentication"
+#
+#     def get(self, request):
+#         help_user_form = HelpUserForm()
+#         context = {
+#             "form": help_user_form,
+#         }
+#         return render(request, "user/help_user_form.html", context)
+#
+#     def post(self, request):
+#         help_user_form = HelpUserForm(request.POST)
+#         if help_user_form.is_valid():
+#             subject = "Help for client"
+#             from_email = help_user_form.cleaned_data["email"]
+#             message = help_user_form.cleaned_data["message"]
+#             if from_email == request.user.email:
+#                 try:
+#                     send_mail(
+#                         subject,
+#                         message,
+#                         from_email,
+#                         [settings.EMAIL_HOST_USER],
+#                         fail_silently=False,
+#                     )
+#                     messages.error(request, "Mail is sent successful")
+#                 except BadHeaderError:
+#                     messages.error(request, "Send email wrong")
+#                     return redirect("help")
+#                 return redirect("home_page")
+#             else:
+#                 messages.error(request, "Your email is wrong")
+#         return redirect("help")

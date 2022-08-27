@@ -13,7 +13,7 @@ class SellerSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Seller
-        fields = '__all__'
+        fields = "__all__"
 
     def get_first_name(self, instance):
         return instance.user.first_name

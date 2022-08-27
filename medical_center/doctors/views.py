@@ -1,10 +1,4 @@
-from django.forms import model_to_dict
-from django.shortcuts import render
-from rest_framework import generics, viewsets, mixins, status
-from rest_framework.decorators import action
-from rest_framework.response import Response
-from rest_framework.views import APIView
-from rest_framework.viewsets import GenericViewSet
+from rest_framework import generics
 from rest_framework.permissions import IsAdminUser
 from doctors.models import DoctorsCategory, Doctor
 from doctors.serializers import DoctorsCategorySerializer, DoctorSerializer
@@ -13,19 +7,25 @@ from doctors.serializers import DoctorsCategorySerializer, DoctorSerializer
 class DoctorsCategoriesListAPIView(generics.ListCreateAPIView):
     queryset = DoctorsCategory.objects.all()
     serializer_class = DoctorsCategorySerializer
-    permission_classes = [IsAdminUser, ]
+    permission_classes = [
+        IsAdminUser,
+    ]
 
 
 class DoctorsCategoriesUpdateAPIView(generics.RetrieveUpdateAPIView):
     queryset = DoctorsCategory.objects.all()
     serializer_class = DoctorsCategorySerializer
-    permission_classes = [IsAdminUser, ]
+    permission_classes = [
+        IsAdminUser,
+    ]
 
 
 class DoctorsCategoriesDestroyAPIView(generics.RetrieveDestroyAPIView):
     queryset = DoctorsCategory.objects.all()
     serializer_class = DoctorsCategorySerializer
-    permission_classes = [IsAdminUser, ]
+    permission_classes = [
+        IsAdminUser,
+    ]
 
 
 class DoctorsCategoriesAPIView(generics.ListAPIView):
@@ -51,26 +51,10 @@ class CurrentDoctorListAPIView(generics.ListAPIView):
         return Doctor.objects.filter(user__email=email)
 
 
-
-
-
-
-
-
-
-
-
-
 #
 # class DoctorsCategoriesDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
 #     queryset = DoctorsCategory.objects.all()
 #     serializer_class = DoctorsCategorySerializer
-
-
-
-
-
-
 
 
 # class DoctorsCategoriesViewSet(viewsets.ModelViewSet):
@@ -89,13 +73,13 @@ class CurrentDoctorListAPIView(generics.ListAPIView):
 #         cats = DoctorsCategory.objects.all()
 #         return Response({'cats': [c.name for c in cats]})
 
-    # @action(methods=['post'], detail=True)
-    # def create(self, request, *args, **kwargs):
-    #     serializer = self.get_serializer(data=request.data)
-    #     serializer.is_valid(raise_exception=True)
-    #     self.perform_create(serializer)
-    #     headers = self.get_success_headers(serializer.data)
-    #     return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+# @action(methods=['post'], detail=True)
+# def create(self, request, *args, **kwargs):
+#     serializer = self.get_serializer(data=request.data)
+#     serializer.is_valid(raise_exception=True)
+#     self.perform_create(serializer)
+#     headers = self.get_success_headers(serializer.data)
+#     return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
 
 # class CreateDoctorCategory(generics.CreateAPIView):

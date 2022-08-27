@@ -12,5 +12,3 @@ class SellerListAPIView(generics.ListAPIView):
         if not email:
             return Seller.objects.all()
         return Seller.objects.filter(user__email=email)
-
-

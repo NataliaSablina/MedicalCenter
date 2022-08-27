@@ -6,7 +6,7 @@ from medicament.models import MedicamentCategory, Medicament, MedicamentSellerRe
 class MedicamentCategoryModelSerializer(serializers.ModelSerializer):
     class Meta:
         model = MedicamentCategory
-        fields = '__all__'
+        fields = "__all__"
 
 
 class MedicamentCategorySerializer(serializers.Serializer):
@@ -19,6 +19,7 @@ class MedicamentCategorySerializer(serializers.Serializer):
         instance.title = validated_data.get("title", instance.title)
         instance.save()
         return instance
+
 
 #
 # class MedicamentModelSerializer(serializers.ModelSerializer):
@@ -37,7 +38,7 @@ class MedicamentSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = MedicamentSellerRelations
-        fields = '__all__'
+        fields = "__all__"
 
     def get_instruction(self, instance):
         return instance.medicament.instruction
@@ -56,7 +57,3 @@ class MedicamentSerializer(serializers.ModelSerializer):
 
     def get_category(self, instance):
         return instance.medicament.category.title
-
-
-
-

@@ -1,6 +1,11 @@
 from django.contrib import admin
 
-from medicament.models import CommentMedicament, MedicamentCategory, Medicament, MedicamentSellerRelations
+from medicament.models import (
+    CommentMedicament,
+    MedicamentCategory,
+    Medicament,
+    MedicamentSellerRelations,
+)
 
 admin.site.register(MedicamentCategory)
 admin.site.register(Medicament)

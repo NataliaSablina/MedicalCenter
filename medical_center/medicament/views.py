@@ -5,13 +5,16 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from medicament.models import MedicamentCategory, Medicament, MedicamentSellerRelations
-from medicament.serializers import MedicamentCategorySerializer, MedicamentCategoryModelSerializer, \
-    MedicamentSerializer
+from medicament.serializers import (
+    MedicamentCategorySerializer,
+    MedicamentCategoryModelSerializer,
+    MedicamentSerializer,
+)
 
 
 class MedicamentCategoryListView(APIView):
     def get(self, request):
-        categories = MedicamentCategory.objects.all().values('id', 'title')
+        categories = MedicamentCategory.objects.all().values("id", "title")
         # return Response({'categories': MedicamentCategorySerializer(categories, many=True).data})
         return Response(MedicamentCategorySerializer(categories, many=True).data)
 
@@ -51,7 +54,9 @@ class MedicamentCategoryView(APIView):
         except:
             return Response({"error: object doesn't exists"})
         instance.delete()
-        return Response(data={'dlete':f'{title} was deleted'}, status=status.HTTP_200_OK)
+        return Response(
+            data={"dlete": f"{title} was deleted"}, status=status.HTTP_200_OK
+        )
 
 
 class CurrentCategoryMedicamentListAPIView(generics.ListAPIView):
@@ -59,8 +64,9 @@ class CurrentCategoryMedicamentListAPIView(generics.ListAPIView):
 
     def get_queryset(self):
         title = self.kwargs.get("title")
-        print(MedicamentSellerRelations.objects.filter(medicament__category__title=title))
-        return MedicamentSellerRelations.objects.filter(medicament__category__title=title)
+        return MedicamentSellerRelations.objects.filter(
+            medicament__category__title=title
+        )
 
 
 class CurrentMedicamentListAPIView(generics.ListAPIView):
@@ -69,4 +75,3 @@ class CurrentMedicamentListAPIView(generics.ListAPIView):
     def get_queryset(self):
         title = self.kwargs.get("title")
         return MedicamentSellerRelations.objects.filter(medicament__title=title)
-
