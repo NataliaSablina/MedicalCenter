@@ -5,7 +5,25 @@ from timetable.permissions import IsAdminAndDoctorOrReadOnly
 from timetable.serializers import TimeTableSerializer
 
 
-class CreateTimeTable(generics.ListCreateAPIView):
+class CreateTimeTableAPIView(generics.CreateAPIView):
     queryset = TimeTable.objects.all()
     serializer_class = TimeTableSerializer
     permission_classes = [IsAdminAndDoctorOrReadOnly]
+
+
+class ListTimeTableAPIView(generics.ListAPIView):
+    queryset = TimeTable.objects.all()
+    serializer_class = TimeTableSerializer
+    permission_classes = [IsAdminAndDoctorOrReadOnly]
+
+
+class UpdateTimeTableAPIView(generics.RetrieveUpdateAPIView):
+    serializer_class = TimeTableSerializer
+    permission_classes = [IsAdminAndDoctorOrReadOnly]
+    lookup_field = 'name'
+    def get_queryset(self):  # должен отображать список
+        name = self.kwargs.get("name")
+        if not name:
+            return TimeTable.objects.all()
+        return TimeTable.objects.filter(name=name)
+
