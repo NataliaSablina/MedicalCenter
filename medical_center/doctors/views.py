@@ -1,7 +1,7 @@
 from rest_framework import generics
 from rest_framework.permissions import IsAdminUser
 from doctors.models import DoctorsCategory, Doctor
-from doctors.serializers import DoctorsCategorySerializer, DoctorSerializer
+from doctors.serializers import DoctorsCategorySerializer, DoctorSerializer, RegistrationDoctorSerializer
 
 
 class DoctorsCategoriesListAPIView(generics.ListCreateAPIView):
@@ -49,6 +49,12 @@ class CurrentDoctorListAPIView(generics.ListAPIView):
     def get_queryset(self):
         email = self.kwargs.get("email")
         return Doctor.objects.filter(user__email=email)
+
+
+class RegistrationDoctorAPIView(generics.CreateAPIView):
+    queryset = Doctor.objects.all()
+    serializer_class = RegistrationDoctorSerializer
+    permission_classes = [IsAdminUser]
 
 
 #

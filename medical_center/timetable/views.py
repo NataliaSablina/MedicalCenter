@@ -21,9 +21,9 @@ class UpdateTimeTableAPIView(generics.RetrieveUpdateAPIView):
     serializer_class = TimeTableSerializer
     permission_classes = [IsAdminAndDoctorOrReadOnly]
     lookup_field = 'name'
-    def get_queryset(self):  # должен отображать список
+
+    def get_queryset(self):
         name = self.kwargs.get("name")
         if not name:
             return TimeTable.objects.all()
         return TimeTable.objects.filter(name=name)
-

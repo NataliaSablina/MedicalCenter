@@ -5,11 +5,12 @@ from django.contrib import messages
 from django.views import View
 from rest_framework import status, generics
 from rest_framework.generics import CreateAPIView
+from rest_framework.permissions import IsAdminUser
 from rest_framework.response import Response
 from medical_center import settings
 from user.forms import HelpUserForm
 from user.models import MyUser
-from user.serializers import RegistrationSerializer, UserSerializer
+from user.serializers import RegistrationSerializer, UserSerializer, RegistrationSuperUserSerializer
 
 
 class RegistrationAPIView(CreateAPIView):
@@ -25,8 +26,6 @@ class RegistrationAPIView(CreateAPIView):
             return Response(data, status=status.HTTP_201_CREATED)
         else:
             data = serializer.errors
-            print("FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFf")
-            print(data)
             return Response(data, status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -36,6 +35,12 @@ class UserPageAPIView(generics.ListAPIView):
     def get_queryset(self):
         email = self.kwargs.get("email")
         return MyUser.objects.filter(email=email)
+
+
+class RegistrationSuperUserAPIView(generics.CreateAPIView):
+    queryset = MyUser.objects.all()
+    serializer_class = RegistrationSuperUserSerializer
+    permission_classes = [IsAdminUser]
 
 
 # class UserPageView(View):

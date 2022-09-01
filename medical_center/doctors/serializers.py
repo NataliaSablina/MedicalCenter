@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from doctors.models import DoctorsCategory, Doctor
 from timetable.models import TimeTable
+from user.models import MyUser
 
 
 class DoctorsCategorySerializer(serializers.ModelSerializer):
@@ -53,13 +54,59 @@ class DoctorSerializer(serializers.ModelSerializer):
                 'saturday':timetable.saturday,
                 'sunday': timetable.sunday}
 
-# class DoctorsCategorySerializer(serializers.Serializer):
-#     name = serializers.CharField()
-#
-#     def create(self, validated_data):
-#         return DoctorsCategory.objects.create(**validated_data)
-#
-#     def update(self, instance, validated_data):
-#         instance.name = validated_data.get("name", instance.name)
-#         instance.save()
-#         return instance
+
+class RegistrationDoctorSerializer(serializers.ModelSerializer):
+    email = serializers.EmailField()
+    first_name = serializers.CharField()
+    second_name = serializers.CharField()
+    sex = serializers.CharField()
+    phone_number = serializers.CharField()
+    date_of_birth = serializers.DateField()
+    work_experience = serializers.CharField()
+    age = serializers.IntegerField()
+    education = serializers.CharField()
+    password1 = serializers.CharField()
+    password2 = serializers.CharField()
+
+    class Meta:
+        model = Doctor
+        fields = (
+            "email",
+            "first_name",
+            "second_name",
+            "sex",
+            "phone_number",
+            "date_of_birth",
+            "work_experience",
+            "age",
+            "category",
+            "work_experience",
+            "age",
+            "education",
+            "password1",
+            "password2",
+        )
+
+    def save(self, *args, **kwargs):
+        user = MyUser.objects.create_user(
+            email=self.validated_data.get("email"),
+            first_name=self.validated_data.get("first_name"),
+            second_name=self.validated_data.get("second_name"),
+            sex=self.validated_data.get("sex", "male"),
+            phone_number=self.validated_data.get("phone_number"),
+            date_of_birth=self.validated_data.get("date_of_birth"),
+        )
+        password1 = self.validated_data.get("password1")
+        password2 = self.validated_data.get("password2")
+        if password1 != password2:
+            raise serializers.ValidationError({password1: "Пароль не совпадает"})
+        user.set_password(password1)
+        user.save()
+        doctor = Doctor.objects.create(user=user,
+                                       category=self.validated_data.get("category"),
+                                       work_experience=self.validated_data.get("work_experience"),
+                                       age=self.validated_data.get("age"),
+                                       education=self.validated_data.get("education"),
+                                       )
+        doctor.save()
+        return doctor
