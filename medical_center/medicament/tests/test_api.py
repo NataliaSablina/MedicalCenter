@@ -3,7 +3,7 @@ from collections import OrderedDict
 from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
-
+from django.test.utils import isolate_apps
 from medicament.models import MedicamentCategory, Medicament, MedicamentSellerRelations
 from seller.models import Seller
 from user.models import MyUser
@@ -30,13 +30,16 @@ class MedicamentCategoryAPITestCase(APITestCase):
             date_of_birth="2003-12-06",
             password="2",
         )
+        print('PPPPPPPPPPPPPPPPPPPPPPPPPPPPPP')
+        print(user2.pk)
         seller1 = Seller.objects.create(
             user=user2, work_experience="2", is_seller=True, age="18"
         )
         msrelations = MedicamentSellerRelations.objects.create(
             medicament=medicament1, seller=seller1, price=(14, "USD")
         )
-
+        print("DDDDDDDDDDDDDDDDDDDDDDDDDD")
+        print(seller1.user.pk)
     def test_all_medicament_categories(self):
         url = reverse("all-medicament-categories")
         response = self.client.get(url)
@@ -46,7 +49,6 @@ class MedicamentCategoryAPITestCase(APITestCase):
         ]
         self.assertEqual(status.HTTP_200_OK, response.status_code)
         self.assertEqual(response.data, expected_data)
-
     def test_current_category(self):
         url = reverse("current-category-medicament", args=["Therapists1"])
         response = self.client.get(url)
@@ -67,7 +69,6 @@ class MedicamentCategoryAPITestCase(APITestCase):
         ]
         self.assertEqual(status.HTTP_200_OK, response.status_code)
         self.assertEqual(expected_data, response.data)
-
     def test_current_medicament(self):
         url = reverse("current-medicament", args=["medicament1"])
         response = self.client.get(url)
@@ -96,3 +97,8 @@ class MedicamentCategoryAPITestCase(APITestCase):
     #     response = self.client.post(url, data={'title': 'gleb'})
     #     self.assertEqual(response.status_code, status.HTTP_201_CREATED)
     #     self.assertEqual(MedicamentCategory.objects.all().count(), categories_count + 1)
+
+    # @classmethod
+    # def tearDownClass(cls):
+    #     super().tearDownClass()
+    #     MyUser.objects.all().delete()

@@ -7,9 +7,9 @@ from rest_framework import status, generics
 from rest_framework.generics import CreateAPIView
 from rest_framework.response import Response
 from medical_center import settings
-from .forms import HelpUserForm
-from .models import MyUser
-from .serializers import RegistrationSerializer, UserSerializer
+from user.forms import HelpUserForm
+from user.models import MyUser
+from user.serializers import RegistrationSerializer, UserSerializer
 
 
 class RegistrationAPIView(CreateAPIView):
@@ -27,7 +27,7 @@ class RegistrationAPIView(CreateAPIView):
             data = serializer.errors
             print("FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFf")
             print(data)
-            return Response(data, status=status.HTTP_201_CREATED)
+            return Response(data, status=status.HTTP_400_BAD_REQUEST)
 
 
 class UserPageAPIView(generics.ListAPIView):

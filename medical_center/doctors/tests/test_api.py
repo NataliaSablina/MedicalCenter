@@ -13,9 +13,9 @@ class DoctorsViewAPI(APITestCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        category1 = DoctorsCategory.objects.create(name="doctors1")
-        category2 = DoctorsCategory.objects.create(name="doctors2")
-        user2 = MyUser.objects.create_user(
+        cls.category1 = DoctorsCategory.objects.create(name="doctors1")
+        cls.category2 = DoctorsCategory.objects.create(name="doctors2")
+        cls.user2 = MyUser.objects.create_user(
             email="user2@gmail.com",
             first_name="user2",
             second_name="user2",
@@ -24,14 +24,18 @@ class DoctorsViewAPI(APITestCase):
             date_of_birth="2003-12-06",
             password="2",
         )
-        doctor1 = Doctor.objects.create(
-            user=user2,
-            category=category1,
+        print('YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY')
+        print(cls.user2.pk)
+        cls.doctor1 = Doctor.objects.create(
+            user=cls.user2,
+            category=cls.category1,
             work_experience="2",
             education="3",
             age=23,
             is_doctor=True,
         )
+        print('OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO')
+        print(cls.doctor1.user.pk)
 
     def test_all_doctors_categories(self):
         url = reverse("all-doctors-categories")
@@ -94,3 +98,11 @@ class DoctorsViewAPI(APITestCase):
         ]
         self.assertEqual(status.HTTP_200_OK, response.status_code)
         self.assertEqual(response.data, expected_data)
+
+    # def tearDownClass(self):
+    #     result1 = MyUser.objects.get(email='user2@gmail.com')
+    #     print(result1)
+    #     result1.delete()
+    #     result = MyUser.objects.get(email='user2@gmail.com')
+    #     print(result)
+

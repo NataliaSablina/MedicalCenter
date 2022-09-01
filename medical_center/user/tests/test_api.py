@@ -2,16 +2,13 @@ from collections import OrderedDict
 
 from django.urls import reverse
 from rest_framework import status
+from rest_framework.exceptions import ErrorDetail
 from rest_framework.test import APITestCase
 
 from user.models import MyUser
 
-# email, first_name, second_name, sex, phone_number, date_of_birth, password=None
-from user.serializers import UserSerializer
-
 
 class UserPageAPITestCase(APITestCase):
-    pass
 
     @classmethod
     def setUpClass(csl):
@@ -24,6 +21,8 @@ class UserPageAPITestCase(APITestCase):
             phone_number="+48657823912",
             date_of_birth="2003-12-06",
         )
+        print("UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU")
+        print(user2.pk)
 
     def test_user_page(self):
         url = reverse("user-page", args=["user2@gmail.com"])
@@ -66,3 +65,23 @@ class UserPageAPITestCase(APITestCase):
         )
         self.assertEqual(status.HTTP_201_CREATED, response.status_code)
         self.assertEqual(MyUser.objects.all().count(), users_count + 1)
+
+    def test_incorrect_registration_data(self):
+        url = reverse('registration')
+        response = self.client.post(url, data={
+                "email": "user3@gmail.com",
+                "first_name": "user3",
+                "second_name": "user3",
+                "phone_number": "+48657823912",
+                "date_of_birth": "2003-12-06",
+                "password1": "3",
+                "password2": "2",
+            },)
+        incorrect_data_errors = {'3': ErrorDetail(string='Пароль не совпадает', code='invalid')}
+        self.assertEqual(status.HTTP_400_BAD_REQUEST, response.status_code)
+        self.assertEqual(incorrect_data_errors, response.data)
+
+    @classmethod
+    def tearDownClass(cls):
+        super().tearDownClass()
+        MyUser.objects.all().delete()

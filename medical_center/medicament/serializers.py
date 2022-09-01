@@ -57,3 +57,9 @@ class MedicamentSerializer(serializers.ModelSerializer):
 
     def get_category(self, instance):
         return instance.medicament.category.title
+
+
+class OnlyMedicamentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Medicament
+        fields = '__all__'

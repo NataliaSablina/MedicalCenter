@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from doctors.models import DoctorsCategory, Doctor
+from timetable.models import TimeTable
 
 
 class DoctorsCategorySerializer(serializers.ModelSerializer):
@@ -15,6 +16,7 @@ class DoctorSerializer(serializers.ModelSerializer):
     sex = serializers.SerializerMethodField()
     date_of_birth = serializers.SerializerMethodField()
     email = serializers.SerializerMethodField()
+    timetable = serializers.SerializerMethodField()
 
     class Meta:
         model = Doctor
@@ -38,6 +40,18 @@ class DoctorSerializer(serializers.ModelSerializer):
     def get_sex(self, instance):
         return instance.user.sex
 
+    def get_timetable(self, instance):
+        timetable = TimeTable.objects.get(user=instance.user)
+        print(timetable)
+        if timetable.name is None:
+            return "doctor doesn't have timetable"
+        return {'monday': timetable.monday,
+                'tuesday': timetable.tuesday,
+                'wednesday': timetable.wednesday,
+                'thursday': timetable.thursday,
+                'friday': timetable.friday,
+                'saturday':timetable.saturday,
+                'sunday': timetable.sunday}
 
 # class DoctorsCategorySerializer(serializers.Serializer):
 #     name = serializers.CharField()

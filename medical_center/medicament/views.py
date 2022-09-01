@@ -1,14 +1,15 @@
 from django.shortcuts import render
 from rest_framework import status, generics
+from rest_framework.filters import SearchFilter
 from rest_framework.permissions import IsAdminUser
 from rest_framework.response import Response
 from rest_framework.views import APIView
-
+from django_filters.rest_framework import DjangoFilterBackend
 from medicament.models import MedicamentCategory, Medicament, MedicamentSellerRelations
 from medicament.serializers import (
     MedicamentCategorySerializer,
     MedicamentCategoryModelSerializer,
-    MedicamentSerializer,
+    MedicamentSerializer, OnlyMedicamentSerializer,
 )
 
 
@@ -75,3 +76,11 @@ class CurrentMedicamentListAPIView(generics.ListAPIView):
     def get_queryset(self):
         title = self.kwargs.get("title")
         return MedicamentSellerRelations.objects.filter(medicament__title=title)
+
+
+class MedicamentListAPIView(generics.ListAPIView):
+    queryset = Medicament.objects.all()
+    serializer_class = OnlyMedicamentSerializer
+    filter_backends = [DjangoFilterBackend, SearchFilter]
+    # filterset_fields = ['title']
+    # searchset_fields = ['title', 'brief_instruction', 'instruction']
