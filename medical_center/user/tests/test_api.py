@@ -9,7 +9,6 @@ from user.models import MyUser
 
 
 class UserPageAPITestCase(APITestCase):
-
     @classmethod
     def setUpClass(csl):
         super().setUpClass()
@@ -67,8 +66,10 @@ class UserPageAPITestCase(APITestCase):
         self.assertEqual(MyUser.objects.all().count(), users_count + 1)
 
     def test_incorrect_registration_data(self):
-        url = reverse('registration')
-        response = self.client.post(url, data={
+        url = reverse("registration")
+        response = self.client.post(
+            url,
+            data={
                 "email": "user3@gmail.com",
                 "first_name": "user3",
                 "second_name": "user3",
@@ -76,8 +77,11 @@ class UserPageAPITestCase(APITestCase):
                 "date_of_birth": "2003-12-06",
                 "password1": "3",
                 "password2": "2",
-            },)
-        incorrect_data_errors = {'3': ErrorDetail(string='Пароль не совпадает', code='invalid')}
+            },
+        )
+        incorrect_data_errors = {
+            "3": ErrorDetail(string="Пароль не совпадает", code="invalid")
+        }
         self.assertEqual(status.HTTP_400_BAD_REQUEST, response.status_code)
         self.assertEqual(incorrect_data_errors, response.data)
 

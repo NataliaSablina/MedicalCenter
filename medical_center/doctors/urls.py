@@ -7,7 +7,9 @@ from doctors.views import (
     DoctorsCategoriesDestroyAPIView,
     DoctorsCategoriesAPIView,
     CurrentCategoryDoctorListAPIView,
-    CurrentDoctorListAPIView, RegistrationDoctorAPIView,
+    CurrentDoctorListAPIView,
+    RegistrationDoctorAPIView,
+    DoctorsListAPIView,
 )
 from rest_framework import routers
 
@@ -48,7 +50,9 @@ urlpatterns = [
         CurrentDoctorListAPIView.as_view(),
         name="current-doctor",
     ),
-    path('create_doctor/', RegistrationDoctorAPIView.as_view(), name='create_doctor')
+    # path("update_doctor/<str:pk>/", UpdateDoctorAPIView.as_view(), name='update_doctor'),
+    path("create_doctor/", RegistrationDoctorAPIView.as_view(), name="create_doctor"),
+    path("all_doctors/", DoctorsListAPIView.as_view(), name="all_doctors")
     # path('categories/create/doctors/category/<int:pk>/', DoctorsCategoriesDetailAPIView.as_view(), name='create-doctor-category'),
     # path('categories/update/doctors/category/', UpdateDoctorCategory.as_view(), name='update-doctor-category'),
     # path('doctors_category_list/', DoctorsCategoriesListAPIView.as_view()),

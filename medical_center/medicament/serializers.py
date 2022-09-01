@@ -62,4 +62,4 @@ class MedicamentSerializer(serializers.ModelSerializer):
 class OnlyMedicamentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Medicament
-        fields = '__all__'
+        fields = "__all__"

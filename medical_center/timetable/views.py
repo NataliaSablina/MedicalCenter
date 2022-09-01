@@ -17,10 +17,10 @@ class ListTimeTableAPIView(generics.ListAPIView):
     permission_classes = [IsAdminAndDoctorOrReadOnly]
 
 
-class UpdateTimeTableAPIView(generics.RetrieveUpdateAPIView):
+class UpdateTimeTableAPIView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = TimeTableSerializer
     permission_classes = [IsAdminAndDoctorOrReadOnly]
-    lookup_field = 'name'
+    lookup_field = "name"
 
     def get_queryset(self):
         name = self.kwargs.get("name")

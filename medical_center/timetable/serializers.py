@@ -6,4 +6,4 @@ from timetable.models import TimeTable
 class TimeTableSerializer(serializers.ModelSerializer):
     class Meta:
         model = TimeTable
-        fields = '__all__'
+        fields = "__all__"

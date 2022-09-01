@@ -9,7 +9,8 @@ from medicament.models import MedicamentCategory, Medicament, MedicamentSellerRe
 from medicament.serializers import (
     MedicamentCategorySerializer,
     MedicamentCategoryModelSerializer,
-    MedicamentSerializer, OnlyMedicamentSerializer,
+    MedicamentSerializer,
+    OnlyMedicamentSerializer,
 )
 
 

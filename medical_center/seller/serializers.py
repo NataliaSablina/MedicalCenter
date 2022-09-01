@@ -77,9 +77,10 @@ class RegistrationSellerSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError({password1: "Пароль не совпадает"})
         user.set_password(password1)
         user.save()
-        seller = Seller.objects.create(user=user,
-                                       work_experience=self.validated_data.get("work_experience"),
-                                       age=self.validated_data.get("age")
-                                       )
+        seller = Seller.objects.create(
+            user=user,
+            work_experience=self.validated_data.get("work_experience"),
+            age=self.validated_data.get("age"),
+        )
         seller.save()
         return seller

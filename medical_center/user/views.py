@@ -10,7 +10,11 @@ from rest_framework.response import Response
 from medical_center import settings
 from user.forms import HelpUserForm
 from user.models import MyUser
-from user.serializers import RegistrationSerializer, UserSerializer, RegistrationSuperUserSerializer
+from user.serializers import (
+    RegistrationSerializer,
+    UserSerializer,
+    RegistrationSuperUserSerializer,
+)
 
 
 class RegistrationAPIView(CreateAPIView):

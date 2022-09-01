@@ -14,7 +14,11 @@ from user.models import MyUser
 class TimeTable(models.Model):
     name = models.CharField(verbose_name="name", max_length=250)
     user = models.ForeignKey(
-        MyUser, on_delete=models.SET_NULL, verbose_name="user", null=True, related_name='doctor_timetable'
+        MyUser,
+        on_delete=models.SET_NULL,
+        verbose_name="user",
+        null=True,
+        related_name="doctor_timetable",
     )
     monday = models.CharField(
         # validators=[timetable_regex],

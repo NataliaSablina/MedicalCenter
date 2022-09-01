@@ -30,7 +30,7 @@ class MedicamentCategoryAPITestCase(APITestCase):
             date_of_birth="2003-12-06",
             password="2",
         )
-        print('PPPPPPPPPPPPPPPPPPPPPPPPPPPPPP')
+        print("PPPPPPPPPPPPPPPPPPPPPPPPPPPPPP")
         print(user2.pk)
         seller1 = Seller.objects.create(
             user=user2, work_experience="2", is_seller=True, age="18"
@@ -40,6 +40,7 @@ class MedicamentCategoryAPITestCase(APITestCase):
         )
         print("DDDDDDDDDDDDDDDDDDDDDDDDDD")
         print(seller1.user.pk)
+
     def test_all_medicament_categories(self):
         url = reverse("all-medicament-categories")
         response = self.client.get(url)
@@ -49,6 +50,7 @@ class MedicamentCategoryAPITestCase(APITestCase):
         ]
         self.assertEqual(status.HTTP_200_OK, response.status_code)
         self.assertEqual(response.data, expected_data)
+
     def test_current_category(self):
         url = reverse("current-category-medicament", args=["Therapists1"])
         response = self.client.get(url)
@@ -69,6 +71,7 @@ class MedicamentCategoryAPITestCase(APITestCase):
         ]
         self.assertEqual(status.HTTP_200_OK, response.status_code)
         self.assertEqual(expected_data, response.data)
+
     def test_current_medicament(self):
         url = reverse("current-medicament", args=["medicament1"])
         response = self.client.get(url)

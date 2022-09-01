@@ -4,7 +4,8 @@ from medicament.views import (
     MedicamentCategoryView,
     MedicamentCategoryListView,
     CurrentCategoryMedicamentListAPIView,
-    CurrentMedicamentListAPIView, MedicamentListAPIView,
+    CurrentMedicamentListAPIView,
+    MedicamentListAPIView,
 )
 
 urlpatterns = [
@@ -33,7 +34,7 @@ urlpatterns = [
         CurrentMedicamentListAPIView.as_view(),
         name="current-medicament",
     ),
-path(
+    path(
         "all/medicament/",
         MedicamentListAPIView.as_view(),
         name="all-medicament",

@@ -24,7 +24,7 @@ class DoctorsViewAPI(APITestCase):
             date_of_birth="2003-12-06",
             password="2",
         )
-        print('YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY')
+        print("YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY")
         print(cls.user2.pk)
         cls.doctor1 = Doctor.objects.create(
             user=cls.user2,
@@ -34,7 +34,7 @@ class DoctorsViewAPI(APITestCase):
             age=23,
             is_doctor=True,
         )
-        print('OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO')
+        print("OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO")
         print(cls.doctor1.user.pk)
 
     def test_all_doctors_categories(self):
@@ -105,4 +105,3 @@ class DoctorsViewAPI(APITestCase):
     #     result1.delete()
     #     result = MyUser.objects.get(email='user2@gmail.com')
     #     print(result)
-

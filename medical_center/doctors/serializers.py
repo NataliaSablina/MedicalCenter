@@ -1,4 +1,6 @@
 from rest_framework import serializers
+from rest_framework.response import Response
+
 from doctors.models import DoctorsCategory, Doctor
 from timetable.models import TimeTable
 from user.models import MyUser
@@ -42,17 +44,23 @@ class DoctorSerializer(serializers.ModelSerializer):
         return instance.user.sex
 
     def get_timetable(self, instance):
-        timetable = TimeTable.objects.get(user=instance.user)
-        print(timetable)
-        if timetable.name is None:
+        try:
+            timetable = TimeTable.objects.get(user=instance.user)
+            print(timetable.monday)
+
+        except Exception:
             return "doctor doesn't have timetable"
-        return {'monday': timetable.monday,
-                'tuesday': timetable.tuesday,
-                'wednesday': timetable.wednesday,
-                'thursday': timetable.thursday,
-                'friday': timetable.friday,
-                'saturday':timetable.saturday,
-                'sunday': timetable.sunday}
+        else:
+            print(timetable.monday)
+            return {
+                "monday": timetable.monday,
+                "tuesday": timetable.tuesday,
+                "wednesday": timetable.wednesday,
+                "thursday": timetable.thursday,
+                "friday": timetable.friday,
+                "saturday": timetable.saturday,
+                "sunday": timetable.sunday,
+            }
 
 
 class RegistrationDoctorSerializer(serializers.ModelSerializer):
@@ -102,11 +110,28 @@ class RegistrationDoctorSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError({password1: "Пароль не совпадает"})
         user.set_password(password1)
         user.save()
-        doctor = Doctor.objects.create(user=user,
-                                       category=self.validated_data.get("category"),
-                                       work_experience=self.validated_data.get("work_experience"),
-                                       age=self.validated_data.get("age"),
-                                       education=self.validated_data.get("education"),
-                                       )
+        doctor = Doctor.objects.create(
+            user=user,
+            category=self.validated_data.get("category"),
+            work_experience=self.validated_data.get("work_experience"),
+            age=self.validated_data.get("age"),
+            education=self.validated_data.get("education"),
+        )
         doctor.save()
         return doctor
+
+
+# class UpdateDoctorSerializer(serializers.ModelSerializer):
+#     first_name = serializers.SerializerMethodField()
+#     second_name = serializers.SerializerMethodField()
+#     phone_number = serializers.SerializerMethodField()
+#     sex = serializers.SerializerMethodField()
+#     date_of_birth = serializers.SerializerMethodField()
+#     email = serializers.SerializerMethodField()
+#     timetable = serializers.SerializerMethodField()
+#
+#     class Meta:
+#         model = Doctor
+#         fields = '__all__'
+#
+#     def put_first_name(self):
