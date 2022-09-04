@@ -5,7 +5,7 @@ from medicament.views import (
     MedicamentCategoryListView,
     CurrentCategoryMedicamentListAPIView,
     CurrentMedicamentListAPIView,
-    MedicamentListAPIView,
+    MedicamentListAPIView, CreateMedicamentAPIView, UpdateMedicamentAPIView,
 )
 
 urlpatterns = [
@@ -39,4 +39,6 @@ urlpatterns = [
         MedicamentListAPIView.as_view(),
         name="all-medicament",
     ),
+    path("create_medicament/", CreateMedicamentAPIView.as_view(), name="create_medicament"),
+    path("update_medicament/<str:title>/", UpdateMedicamentAPIView.as_view(), name="update_medicament"),
 ]

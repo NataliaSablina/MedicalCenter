@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from rest_framework.response import Response
 
-from doctors.models import DoctorsCategory, Doctor
+from doctors.models import DoctorsCategory, Doctor, CommentDoctor
 from timetable.models import TimeTable
 from user.models import MyUser
 
@@ -119,6 +119,12 @@ class RegistrationDoctorSerializer(serializers.ModelSerializer):
         )
         doctor.save()
         return doctor
+
+
+class CommentDoctorSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CommentDoctor
+        fields = '__all__'
 
 
 # class UpdateDoctorSerializer(serializers.ModelSerializer):

@@ -17,7 +17,7 @@ class MedicamentCategory(models.Model):
 
 
 class Medicament(models.Model):
-    title = models.CharField(verbose_name="title", max_length=250)
+    title = models.CharField(verbose_name="title", max_length=250, unique=True)
     instruction = models.TextField(verbose_name="instruction")
     brief_instruction = models.TextField(verbose_name="brief_instruction")
     category = models.ForeignKey(

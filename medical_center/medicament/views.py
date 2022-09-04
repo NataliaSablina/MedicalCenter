@@ -6,6 +6,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from django_filters.rest_framework import DjangoFilterBackend
 from medicament.models import MedicamentCategory, Medicament, MedicamentSellerRelations
+from medicament.permissions import IsAdminAndSellerOrReadOnly
 from medicament.serializers import (
     MedicamentCategorySerializer,
     MedicamentCategoryModelSerializer,
@@ -85,3 +86,24 @@ class MedicamentListAPIView(generics.ListAPIView):
     filter_backends = [DjangoFilterBackend, SearchFilter]
     # filterset_fields = ['title']
     # searchset_fields = ['title', 'brief_instruction', 'instruction']
+
+
+class CreateMedicamentAPIView(generics.CreateAPIView):
+    queryset = Medicament.objects.all()
+    serializer_class = OnlyMedicamentSerializer
+    permission_classes = [IsAdminAndSellerOrReadOnly]
+
+
+class UpdateMedicamentAPIView(generics.RetrieveUpdateDestroyAPIView):
+    serializer_class = OnlyMedicamentSerializer
+    permission_classes = [IsAdminAndSellerOrReadOnly]
+    lookup_field = "title"
+
+    def get_queryset(self):
+        title = self.kwargs.get("title")
+        if not title:
+            return Medicament.objects.all()
+        return Medicament.objects.get(title=title)
+
+
+

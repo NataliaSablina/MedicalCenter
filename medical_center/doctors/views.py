@@ -1,6 +1,6 @@
 from rest_framework import generics
 from rest_framework.permissions import IsAdminUser
-from doctors.models import DoctorsCategory, Doctor
+from doctors.models import DoctorsCategory, Doctor, CommentDoctor
 from doctors.serializers import (
     DoctorsCategorySerializer,
     DoctorSerializer,
@@ -22,6 +22,11 @@ class DoctorsCategoriesUpdateAPIView(generics.RetrieveUpdateAPIView):
     permission_classes = [
         IsAdminUser,
     ]
+
+
+class CreateCommentDoctorAPIView(generics.CreateAPIView):
+    queryset = CommentDoctor.objects.all()
+    serializer_class = CommentDoctor
 
 
 class DoctorsCategoriesDestroyAPIView(generics.RetrieveDestroyAPIView):
