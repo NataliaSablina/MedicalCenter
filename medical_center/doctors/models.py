@@ -36,6 +36,7 @@ class Doctor(models.Model):
 
 
 class CommentDoctor(models.Model):
+    title = models.CharField(max_length=70, unique=True, null=True)
     doctor = models.ForeignKey(Doctor, on_delete=models.CASCADE, verbose_name="doctor")
     user = models.ForeignKey(
         MyUser, on_delete=models.SET_NULL, verbose_name="user", null=True
@@ -53,4 +54,4 @@ class CommentDoctor(models.Model):
         db_table = "CommentDoctor"
 
     def __str__(self):
-        return self.pk, self.content[:20]
+        return str(self.title)

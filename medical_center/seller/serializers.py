@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from seller.models import Seller
+from seller.models import Seller, CommentSeller
 from user.models import MyUser
 
 
@@ -84,3 +84,11 @@ class RegistrationSellerSerializer(serializers.ModelSerializer):
         )
         seller.save()
         return seller
+
+
+class CommentSellerSerializer(serializers.ModelSerializer):
+    user = serializers.HiddenField(default=serializers.CurrentUserDefault())
+
+    class Meta:
+        model = CommentSeller
+        fields = '__all__'

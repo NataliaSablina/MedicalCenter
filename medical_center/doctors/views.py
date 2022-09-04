@@ -4,7 +4,7 @@ from doctors.models import DoctorsCategory, Doctor, CommentDoctor
 from doctors.serializers import (
     DoctorsCategorySerializer,
     DoctorSerializer,
-    RegistrationDoctorSerializer,
+    RegistrationDoctorSerializer, CommentDoctorSerializer,
 )
 
 
@@ -26,7 +26,30 @@ class DoctorsCategoriesUpdateAPIView(generics.RetrieveUpdateAPIView):
 
 class CreateCommentDoctorAPIView(generics.CreateAPIView):
     queryset = CommentDoctor.objects.all()
-    serializer_class = CommentDoctor
+    serializer_class = CommentDoctorSerializer
+
+
+class UpdateCommentDoctorAPIView(generics.RetrieveUpdateDestroyAPIView):
+    serializer_class = CommentDoctorSerializer
+    permission_classes = [IsAdminUser]
+    lookup_field = "title"
+
+    def get_queryset(self):
+        title = self.kwargs.get("title")
+        if not title:
+            return CommentDoctor.objects.all()
+        return CommentDoctor.objects.filter(title=title)
+
+
+class DoctorCommentListAPIView(generics.ListAPIView):
+    serializer_class = CommentDoctorSerializer
+    lookup_url_kwarg = "email"
+
+    def get_queryset(self):
+        title = self.kwargs.get(self.lookup_url_kwarg)
+        if not title:
+            return CommentDoctor.objects.all()
+        return CommentDoctor.objects.filter(doctor__user__email=title)
 
 
 class DoctorsCategoriesDestroyAPIView(generics.RetrieveDestroyAPIView):

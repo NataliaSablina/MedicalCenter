@@ -1,6 +1,5 @@
 from django.urls import path, include
 
-# from doctors.views import DoctorsCategoriesListAPIView, DoctorsCategoriesUpdateAPIView, DoctorsCategoriesDetailAPIView
 from doctors.views import (
     DoctorsCategoriesListAPIView,
     DoctorsCategoriesUpdateAPIView,
@@ -9,17 +8,11 @@ from doctors.views import (
     CurrentCategoryDoctorListAPIView,
     CurrentDoctorListAPIView,
     RegistrationDoctorAPIView,
-    DoctorsListAPIView,
+    DoctorsListAPIView, CreateCommentDoctorAPIView, UpdateCommentDoctorAPIView, DoctorCommentListAPIView,
 )
-from rest_framework import routers
 
-#
-# router = routers.SimpleRouter()
-# router.register(r'doctors_category_list', DoctorsCategoriesViewSet, basename='category')
-# print(router.urls)
 
 urlpatterns = [
-    # path('categories/', include(router.urls)),
     path(
         "categories/create/doctors/category/",
         DoctorsCategoriesListAPIView.as_view(),
@@ -50,15 +43,9 @@ urlpatterns = [
         CurrentDoctorListAPIView.as_view(),
         name="current-doctor",
     ),
-    # path("update_doctor/<str:pk>/", UpdateDoctorAPIView.as_view(), name='update_doctor'),
     path("create_doctor/", RegistrationDoctorAPIView.as_view(), name="create_doctor"),
-    path("all_doctors/", DoctorsListAPIView.as_view(), name="all_doctors")
-    # path('categories/create/doctors/category/<int:pk>/', DoctorsCategoriesDetailAPIView.as_view(), name='create-doctor-category'),
-    # path('categories/update/doctors/category/', UpdateDoctorCategory.as_view(), name='update-doctor-category'),
-    # path('doctors_category_list/', DoctorsCategoriesListAPIView.as_view()),
-    #  path('categories/doctors/categories/', DoctorsCategoriesViewSet.as_view({"get": "list"})),
-    #  path('categories/update/doctors/category/<int:pk>/', DoctorsCategoriesListAPIView.as_view({"put": "update"})),
-    #  path('categories/delete/doctors/category/<int:pk>/', DoctorsCategoriesListAPIView.as_view({"delete": "destroy"})),
-    # path('doctors_category_list/<int:pk>/', DoctorsCategoriesUpdateAPIView.as_view()),
-    # path('doctors_category_list/detail/<int:pk>/', DoctorsCategoriesDetailAPIView.as_view()),
+    path("all_doctors/", DoctorsListAPIView.as_view(), name="all_doctors"),
+    path("create_comment_doctor/", CreateCommentDoctorAPIView.as_view(), name="create_comment_doctor"),
+    path("update_comment_doctor/<str:title>/", UpdateCommentDoctorAPIView.as_view(), name="update_comment_doctor"),
+    path("comments_doctor/<str:email>/", DoctorCommentListAPIView.as_view(), name="comments_doctor"),
 ]

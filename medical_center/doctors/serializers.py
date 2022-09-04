@@ -122,6 +122,8 @@ class RegistrationDoctorSerializer(serializers.ModelSerializer):
 
 
 class CommentDoctorSerializer(serializers.ModelSerializer):
+    user = serializers.HiddenField(default=serializers.CurrentUserDefault())
+
     class Meta:
         model = CommentDoctor
         fields = '__all__'
