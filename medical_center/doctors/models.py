@@ -43,7 +43,7 @@ class CommentDoctor(models.Model):
     )
     content = models.TextField(verbose_name="content")
     creation_date = models.DateField(
-        verbose_name="creation_date", auto_now_add=True, auto_now=False
+        verbose_name="creation_date", auto_now_add=True, auto_now=False, null=True
     )
     comment_on_comment = models.ForeignKey(
         "CommentDoctor",

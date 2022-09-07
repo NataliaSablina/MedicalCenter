@@ -92,5 +92,28 @@
       "price_currency": "USD",
       "price": "14.00"
     }
+  },
+  {
+    "pk": 3,
+    "model": "user.MyUser",
+    "fields": {
+      "first_name": "user6",
+      "second_name": "user6",
+      "email": "user6@gmail.com",
+      "phone_number": "+48796730195",
+      "date_of_birth": "2003-12-06",
+      "sex": "male"
+    },
+    "permissions": []
+  },
+  {
+    "pk": 1,
+    "model": "doctors.CommentDoctor",
+    "fields": {
+      "title": "doctor1comment1",
+      "doctor": 1,
+      "user": 3,
+      "content": "content for doctor1comment1"
+    }
   }
 ]
