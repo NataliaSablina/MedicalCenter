@@ -45,8 +45,13 @@ class CommentDoctor(models.Model):
     creation_date = models.DateField(
         verbose_name="creation_date", auto_now_add=True, auto_now=False
     )
-    comment_on_comment = models.ForeignKey('CommentDoctor', on_delete=models.CASCADE, verbose_name='comment_on_comment', blank=True,
-                                null=True)
+    comment_on_comment = models.ForeignKey(
+        "CommentDoctor",
+        on_delete=models.CASCADE,
+        verbose_name="comment_on_comment",
+        blank=True,
+        null=True,
+    )
 
     class Meta:
         verbose_name = "CommentDoctor"

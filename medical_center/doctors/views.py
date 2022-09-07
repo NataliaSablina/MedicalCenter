@@ -1,10 +1,14 @@
-from rest_framework import generics
+from rest_framework import generics, status
 from rest_framework.permissions import IsAdminUser
+from rest_framework.response import Response
+
 from doctors.models import DoctorsCategory, Doctor, CommentDoctor
 from doctors.serializers import (
     DoctorsCategorySerializer,
     DoctorSerializer,
-    RegistrationDoctorSerializer, CommentDoctorSerializer,
+    RegistrationDoctorSerializer,
+    CommentDoctorSerializer,
+    DoctorUpdateSerializer,
 )
 
 
@@ -89,14 +93,22 @@ class RegistrationDoctorAPIView(generics.CreateAPIView):
     permission_classes = [IsAdminUser]
 
 
-# class UpdateDoctorAPIView(generics.RetrieveUpdateAPIView):
-#     queryset = Doctor.objects.all()
-#     serializer_class = UpdateDoctorSerializer
-#     lookup_field = 'pk'
-#
-#     def get_queryset(self):
-#         pk = self.kwargs.get("pk")
-#         return Doctor.objects.filter(pk=pk)
+class UpdateDoctorAPIView(generics.RetrieveUpdateAPIView):
+    serializer_class = DoctorSerializer
+    lookup_url_kwarg = "email"
+
+    def get_queryset(self):
+        email = self.kwargs.get(self.lookup_url_kwarg)
+        if not email:
+            return Doctor.objects.all()
+        return Doctor.objects.filter(user__email=email)
+
+    def put(self, request, *args, **kwargs):
+        serializer = DoctorUpdateSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class DoctorsListAPIView(generics.ListAPIView):

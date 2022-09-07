@@ -1,5 +1,6 @@
 from collections import OrderedDict
 
+from django.core.management import call_command
 from django.urls import reverse
 from rest_framework import status
 from rest_framework.exceptions import ErrorDetail
@@ -10,34 +11,25 @@ from user.models import MyUser
 
 class UserPageAPITestCase(APITestCase):
     @classmethod
-    def setUpClass(csl):
-        super().setUpClass()
-        user2 = MyUser.objects.create_user(
-            email="user2@gmail.com",
-            first_name="user2",
-            second_name="user2",
-            sex="male",
-            phone_number="+48657823912",
-            date_of_birth="2003-12-06",
-        )
-        print("UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU")
-        print(user2.pk)
+    def setUpTestData(cls):
+        super().setUpTestData()
+        call_command("loaddata", "user/fixtures.json", verbosity=0)
 
     def test_user_page(self):
-        url = reverse("user-page", args=["user2@gmail.com"])
+        url = reverse("user_page", args=["user4@gmail.com"])
         response = self.client.get(url)
         expected_data = [
             OrderedDict(
                 [
-                    ("id", 3),
+                    ("id", 1),
                     ("last_login", None),
-                    ("first_name", "user2"),
-                    ("second_name", "user2"),
-                    ("phone_number", "+48657823912"),
+                    ("first_name", "user1"),
+                    ("second_name", "user1"),
+                    ("phone_number", "+48796730195"),
                     ("date_of_birth", "2003-12-06"),
                     ("sex", "male"),
                     ("photo", None),
-                    ("email", "user2@gmail.com"),
+                    ("email", "user4@gmail.com"),
                     ("is_active", True),
                     ("is_admin", False),
                 ]
@@ -84,8 +76,3 @@ class UserPageAPITestCase(APITestCase):
         }
         self.assertEqual(status.HTTP_400_BAD_REQUEST, response.status_code)
         self.assertEqual(incorrect_data_errors, response.data)
-
-    @classmethod
-    def tearDownClass(cls):
-        super().tearDownClass()
-        MyUser.objects.all().delete()

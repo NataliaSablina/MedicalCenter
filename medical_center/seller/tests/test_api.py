@@ -1,38 +1,36 @@
+from collections import OrderedDict
+import datetime
+from django.core.management import call_command
 from django.urls import reverse
+from rest_framework import status
 from rest_framework.test import APITestCase
 
-from seller.models import Seller
-from user.models import MyUser
 
+class SellerAPITestCase(APITestCase):
+    @classmethod
+    def setUpTestData(cls):
+        super().setUpTestData()
+        call_command("loaddata", "user/fixtures.json", verbosity=0)
 
-# class SellerAPITestCase(APITestCase):
-#
-#     @classmethod
-#     def setUpClass(cls):
-#         super().setUpClass()
-#         user4 = MyUser.objects.create_user(
-#             email="user4@gmail.com",
-#             first_name="user4",
-#             second_name="user4",
-#             sex="male",
-#             phone_number="+48657823912",
-#             date_of_birth="2003-12-06",
-#             password="2",
-#         )
-#         print("JJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJ")
-#         print(user4.pk)
-#         seller1 = Seller.objects.create(
-#             user=user4, work_experience="2", is_seller=True, age="18"
-#         )
-#         print("KKKKKKKKKKKKKKKKKKKKKKKKKKKK")
-#         print(seller1.user.pk)
-#
-#     def test_all_sellers(self):
-#         url = reverse('all-sellers')
-#         response = self.client.get(url)
-#         print(response.data)
-#
-#     @classmethod
-#     def tearDownClass(cls):
-#         super().tearDownClass()
-#         MyUser.objects.all().delete()
+    def test_all_sellers(self):
+        url = reverse("all-sellers")
+        response = self.client.get(url)
+        expected_data = [
+            OrderedDict(
+                [
+                    ("id", 1),
+                    ("first_name", "user5"),
+                    ("second_name", "user5"),
+                    ("phone_number", "+48796730195"),
+                    ("sex", "male"),
+                    ("date_of_birth", datetime.date(2003, 12, 6)),
+                    ("email", "user5@gmail.com"),
+                    ("work_experience", "SELLER"),
+                    ("age", 18),
+                    ("is_seller", True),
+                    ("user", 2),
+                ]
+            )
+        ]
+        self.assertEqual(status.HTTP_200_OK, response.status_code)
+        self.assertEqual(response.data, expected_data)

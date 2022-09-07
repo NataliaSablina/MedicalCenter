@@ -104,6 +104,3 @@ class UpdateMedicamentAPIView(generics.RetrieveUpdateDestroyAPIView):
         if not title:
             return Medicament.objects.all()
         return Medicament.objects.get(title=title)
-
-
-

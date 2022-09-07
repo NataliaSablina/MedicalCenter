@@ -1,0 +1,96 @@
+[
+  {
+    "pk": 1,
+    "model": "user.MyUser",
+    "fields": {
+      "first_name": "user1",
+      "second_name": "user1",
+      "email": "user4@gmail.com",
+      "phone_number": "+48796730195",
+      "date_of_birth": "2003-12-06",
+      "sex": "male"
+    },
+    "permissions": []
+  },
+  {
+    "pk": 1,
+    "model": "doctors.DoctorsCategory",
+    "fields": {
+      "name": "category3"
+    }
+  },
+  {
+    "pk": 2,
+    "model": "doctors.DoctorsCategory",
+    "fields": {
+      "name": "category4"
+    }
+  },
+  {
+    "pk": 1,
+    "model": "doctors.Doctor",
+    "fields": {
+      "user": 1,
+      "age": "18",
+      "work_experience": "MED",
+      "education": "BSU",
+      "category": 2
+    }
+  },
+  {
+    "pk": 1,
+    "model": "medicament.MedicamentCategory",
+    "fields": {
+      "title": "category3"
+    }
+  },
+  {
+    "pk": 2,
+    "model": "medicament.MedicamentCategory",
+    "fields": {
+      "title": "category4"
+    }
+  },
+  {
+    "pk": 2,
+    "model": "user.MyUser",
+    "fields": {
+      "first_name": "user5",
+      "second_name": "user5",
+      "email": "user5@gmail.com",
+      "phone_number": "+48796730195",
+      "date_of_birth": "2003-12-06",
+      "sex": "male"
+    },
+    "permissions": []
+  },
+  {
+    "pk": 1,
+    "model": "seller.Seller",
+    "fields": {
+      "user": 2,
+      "age": "18",
+      "work_experience": "SELLER"
+    }
+  },
+  {
+    "pk": 1,
+    "model": "medicament.Medicament",
+    "fields": {
+      "title": "medicament1",
+      "instruction": "medicament1 instruction",
+      "brief_instruction": "medicament1 brief_instruction",
+      "category": 1
+    }
+  },
+  {
+    "pk": 1,
+    "model": "medicament.MedicamentSellerRelations",
+    "fields": {
+      "medicament": 1,
+      "seller": 1,
+      "price_currency": "USD",
+      "price": "14.00"
+    }
+  }
+]

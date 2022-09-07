@@ -8,7 +8,11 @@ from doctors.views import (
     CurrentCategoryDoctorListAPIView,
     CurrentDoctorListAPIView,
     RegistrationDoctorAPIView,
-    DoctorsListAPIView, CreateCommentDoctorAPIView, UpdateCommentDoctorAPIView, DoctorCommentListAPIView,
+    DoctorsListAPIView,
+    CreateCommentDoctorAPIView,
+    UpdateCommentDoctorAPIView,
+    DoctorCommentListAPIView,
+    UpdateDoctorAPIView,
 )
 
 
@@ -45,7 +49,24 @@ urlpatterns = [
     ),
     path("create_doctor/", RegistrationDoctorAPIView.as_view(), name="create_doctor"),
     path("all_doctors/", DoctorsListAPIView.as_view(), name="all_doctors"),
-    path("create_comment_doctor/", CreateCommentDoctorAPIView.as_view(), name="create_comment_doctor"),
-    path("update_comment_doctor/<str:title>/", UpdateCommentDoctorAPIView.as_view(), name="update_comment_doctor"),
-    path("comments_doctor/<str:email>/", DoctorCommentListAPIView.as_view(), name="comments_doctor"),
+    path(
+        "create_comment_doctor/",
+        CreateCommentDoctorAPIView.as_view(),
+        name="create_comment_doctor",
+    ),
+    path(
+        "update_comment_doctor/<str:title>/",
+        UpdateCommentDoctorAPIView.as_view(),
+        name="update_comment_doctor",
+    ),
+    path(
+        "comments_doctor/<str:email>/",
+        DoctorCommentListAPIView.as_view(),
+        name="comments_doctor",
+    ),
+    path(
+        "update_doctor/<str:email>/",
+        UpdateDoctorAPIView.as_view(),
+        name="update_doctor",
+    ),
 ]

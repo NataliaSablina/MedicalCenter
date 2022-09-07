@@ -91,4 +91,4 @@ class CommentSellerSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = CommentSeller
-        fields = '__all__'
+        fields = "__all__"

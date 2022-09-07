@@ -2,7 +2,11 @@ from rest_framework import generics
 from rest_framework.permissions import IsAdminUser
 
 from seller.models import Seller, CommentSeller
-from seller.serializers import SellerSerializer, RegistrationSellerSerializer, CommentSellerSerializer
+from seller.serializers import (
+    SellerSerializer,
+    RegistrationSellerSerializer,
+    CommentSellerSerializer,
+)
 
 
 class SellerListAPIView(generics.ListAPIView):
