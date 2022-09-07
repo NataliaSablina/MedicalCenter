@@ -94,7 +94,7 @@ class RegistrationDoctorAPIView(generics.CreateAPIView):
 
 
 class UpdateDoctorAPIView(generics.RetrieveUpdateAPIView):
-    serializer_class = DoctorSerializer
+    serializer_class = DoctorUpdateSerializer
     lookup_url_kwarg = "email"
 
     def get_queryset(self):
@@ -103,9 +103,13 @@ class UpdateDoctorAPIView(generics.RetrieveUpdateAPIView):
             return Doctor.objects.all()
         return Doctor.objects.filter(user__email=email)
 
-    def put(self, request, *args, **kwargs):
+    def update(self, request, *args, **kwargs):
         serializer = DoctorUpdateSerializer(data=request.data)
+        print('PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPp')
+        print(request.data)
         if serializer.is_valid():
+            print('OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO')
+            print(serializer)
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

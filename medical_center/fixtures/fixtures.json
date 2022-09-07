@@ -115,5 +115,61 @@
       "user": 3,
       "content": "content for doctor1comment1"
     }
+  },
+
+  {
+    "pk": 1,
+    "model": "timetable.TimeTable",
+    "fields": {
+      "name": "timetable1",
+      "user": 1,
+      "monday": "7.30a.m-2p.m",
+      "tuesday": "7.30a.m-2p.m",
+      "wednesday": "7.30a.m-2p.m",
+      "thursday": "7.30a.m-2p.m",
+      "friday": "7.30a.m-2p.m",
+      "saturday": "7.30a.m-2p.m",
+      "sunday": "7.30a.m-2p.m"
+    }
+  },
+
+  {
+    "pk": 4,
+    "model": "user.MyUser",
+    "fields": {
+      "first_name": "user7",
+      "second_name": "user7",
+      "email": "user7@gmail.com",
+      "phone_number": "+48796730195",
+      "date_of_birth": "2003-12-06",
+      "sex": "male"
+    },
+    "permissions": []
+  },
+  {
+    "pk": 2,
+    "model": "doctors.Doctor",
+    "fields": {
+      "user": 4,
+      "age": "18",
+      "work_experience": "MED",
+      "education": "BSU",
+      "category": 1
+    }
+  },
+
+  {
+    "pk": 5,
+    "model": "user.MyUser",
+    "fields": {
+      "first_name": "user8",
+      "second_name": "user8",
+      "email": "user8@gmail.com",
+      "phone_number": "+48796730195",
+      "date_of_birth": "2003-12-06",
+      "sex": "male",
+      "is_admin": "True"
+    },
+    "permissions": []
   }
 ]
