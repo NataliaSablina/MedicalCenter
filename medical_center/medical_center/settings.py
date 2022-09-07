@@ -137,7 +137,7 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static"),
 ]
 # STATICFILES_DIRS = (os.path.join('static'),)
-
+FIXTURE_DIRS = ('medical_center/fixtures',)
 MEDIA_ROOT = os.path.join(BASE_DIR, "media/")
 MEDIA_URL = "/media/"
 

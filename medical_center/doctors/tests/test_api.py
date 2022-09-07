@@ -10,7 +10,7 @@ class DoctorsViewAPI(APITestCase):
     @classmethod
     def setUpTestData(cls):
         super().setUpTestData()
-        call_command("loaddata", "user/fixtures.json", verbosity=0)
+        call_command("loaddata", "fixtures/fixtures.json", verbosity=0)
 
     def test_all_doctors_categories(self):
         url = reverse("all-doctors-categories")

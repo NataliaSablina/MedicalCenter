@@ -10,7 +10,7 @@ class SellerAPITestCase(APITestCase):
     @classmethod
     def setUpTestData(cls):
         super().setUpTestData()
-        call_command("loaddata", "user/fixtures.json", verbosity=0)
+        call_command("loaddata", "fixtures/fixtures.json", verbosity=0)
 
     def test_all_sellers(self):
         url = reverse("all-sellers")

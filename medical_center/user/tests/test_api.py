@@ -13,7 +13,7 @@ class UserPageAPITestCase(APITestCase):
     @classmethod
     def setUpTestData(cls):
         super().setUpTestData()
-        call_command("loaddata", "user/fixtures.json", verbosity=0)
+        call_command("loaddata", "fixtures/fixtures.json", verbosity=0)
 
     def test_user_page(self):
         url = reverse("user_page", args=["user4@gmail.com"])
