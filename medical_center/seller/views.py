@@ -1,3 +1,4 @@
+from django.db.models import Prefetch
 from rest_framework import generics
 from rest_framework.permissions import IsAdminUser
 
@@ -7,6 +8,7 @@ from seller.serializers import (
     RegistrationSellerSerializer,
     CommentSellerSerializer,
 )
+from user.models import MyUser
 
 
 class SellerListAPIView(generics.ListAPIView):
@@ -14,9 +16,10 @@ class SellerListAPIView(generics.ListAPIView):
 
     def get_queryset(self):
         email = self.kwargs.get("email", None)
+        queryset = Seller.objects.select_related("user").filter(user__email=email)
         if not email:
             return Seller.objects.all()
-        return Seller.objects.filter(user__email=email)
+        return queryset
 
 
 class RegistrationSellerAPIView(generics.CreateAPIView):
@@ -47,7 +50,7 @@ class SellerCommentListAPIView(generics.ListAPIView):
     lookup_url_kwarg = "email"
 
     def get_queryset(self):
-        title = self.kwargs.get(self.lookup_url_kwarg)
-        if not title:
+        email = self.kwargs.get(self.lookup_url_kwarg)
+        if not email:
             return CommentSeller.objects.all()
-        return CommentSeller.objects.filter(seller__user__email=title)
+        return CommentSeller.objects.filter(seller__user__email=email)

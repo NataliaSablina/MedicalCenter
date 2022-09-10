@@ -9,6 +9,7 @@ class DoctorsCategory(models.Model):
         verbose_name = "DoctorsCategory"
         verbose_name_plural = "DoctorsCategories"
         db_table = "DoctorsCategory"
+        default_related_name = "doctor_categories"
 
     def __str__(self):
         return self.name
@@ -30,6 +31,7 @@ class Doctor(models.Model):
         verbose_name = "Doctor"
         verbose_name_plural = "Doctors"
         db_table = "Doctors"
+        default_related_name = "doctors"
 
     def __str__(self):
         return self.user.email
@@ -57,6 +59,7 @@ class CommentDoctor(models.Model):
         verbose_name = "CommentDoctor"
         verbose_name_plural = "CommentsDoctors"
         db_table = "CommentDoctor"
+        default_related_name = "comments_doctor"
 
     def __str__(self):
         return str(self.title)

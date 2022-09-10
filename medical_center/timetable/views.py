@@ -12,9 +12,11 @@ class CreateTimeTableAPIView(generics.CreateAPIView):
 
 
 class ListTimeTableAPIView(generics.ListAPIView):
-    queryset = TimeTable.objects.all()
     serializer_class = TimeTableSerializer
     permission_classes = [IsAdminAndDoctorOrReadOnly]
+
+    def get_queryset(self):
+        return TimeTable.objects.select_related("user")
 
 
 class UpdateTimeTableAPIView(generics.RetrieveUpdateDestroyAPIView):

@@ -13,6 +13,7 @@ class Seller(models.Model):
         verbose_name = "Seller"
         verbose_name_plural = "Sellers"
         db_table = "Seller"
+        default_related_name = "sellers"
 
     def __str__(self):
         return self.user.email
@@ -40,6 +41,7 @@ class CommentSeller(models.Model):
         verbose_name = "CommentSeller"
         verbose_name_plural = "CommentsDSellers"
         db_table = "CommentSeller"
+        default_related_name = "comment_seller"
 
     def __str__(self):
         return str(self.title)

@@ -98,6 +98,7 @@ class MyUser(AbstractBaseUser):
         verbose_name = "User"
         verbose_name_plural = "Users"
         db_table = "MyUser"
+        default_related_name = "users"
 
     def __str__(self):
         return self.email

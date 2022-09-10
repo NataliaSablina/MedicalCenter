@@ -1,3 +1,4 @@
+from django.db.models import Prefetch
 from rest_framework import generics, status
 from rest_framework.permissions import IsAdminUser
 from rest_framework.response import Response
@@ -10,6 +11,7 @@ from doctors.serializers import (
     CommentDoctorSerializer,
     DoctorUpdateSerializer,
 )
+from user.models import MyUser
 
 
 class DoctorsCategoriesListAPIView(generics.ListCreateAPIView):
@@ -74,7 +76,6 @@ class CurrentCategoryDoctorListAPIView(generics.ListAPIView):
 
     def get_queryset(self):
         name = self.kwargs.get("name")
-        print(name)
         doctors = Doctor.objects.filter(category__name=name)
         return doctors
 
@@ -84,7 +85,8 @@ class CurrentDoctorListAPIView(generics.ListAPIView):
 
     def get_queryset(self):
         email = self.kwargs.get("email")
-        return Doctor.objects.filter(user__email=email)
+        return Doctor.objects.select_related("user").filter(user__email=email)
+        # return Doctor.objects.filter(user__email=email)
 
 
 class RegistrationDoctorAPIView(generics.CreateAPIView):
@@ -105,10 +107,12 @@ class UpdateDoctorAPIView(generics.RetrieveUpdateAPIView):
 
     def update(self, request, *args, **kwargs):
         serializer = DoctorUpdateSerializer(data=request.data)
-        print('PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPp')
+        print("PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPp")
         print(request.data)
         if serializer.is_valid():
-            print('OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO')
+            print(
+                "OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO"
+            )
             print(serializer)
             serializer.save()
             return Response(serializer.data)
@@ -116,6 +120,8 @@ class UpdateDoctorAPIView(generics.RetrieveUpdateAPIView):
 
 
 class DoctorsListAPIView(generics.ListAPIView):
-    queryset = Doctor.objects.all()
     serializer_class = DoctorSerializer
     permission_classes = [IsAdminUser]
+
+    def get_queryset(self):
+        return Doctor.objects.select_related("user")

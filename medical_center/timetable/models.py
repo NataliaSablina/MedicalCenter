@@ -74,6 +74,7 @@ class TimeTable(models.Model):
         verbose_name = "TimeTable"
         verbose_name_plural = "TimeTables"
         db_table = "TimeTable"
+        default_related_name = "timetables"
 
     def __str__(self):
         return self.name

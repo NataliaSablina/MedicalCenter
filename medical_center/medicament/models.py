@@ -28,6 +28,7 @@ class Medicament(models.Model):
         verbose_name = "Medicament"
         verbose_name_plural = "Medicaments"
         db_table = "Medicament"
+        default_related_name = "medicament"
 
     def __str__(self):
         return self.title
@@ -46,6 +47,7 @@ class CommentMedicament(models.Model):
         verbose_name = "CommentMedicament"
         verbose_name_plural = "CommentsMedicament"
         db_table = "CommentMedicament"
+        default_related_name = "comment_medicament"
 
     def __str__(self):
         return self.pk, self.content[:20]
@@ -67,6 +69,7 @@ class MedicamentSellerRelations(models.Model):
         verbose_name = "MedicamentSellerRelations"
         verbose_name_plural = "MedicamentSellerRelations"
         db_table = "MedicamentSellerRelations"
+        default_related_name = "medicament_seller_relations"
 
     def __str__(self):
         return f"{self.medicament.title}, {self.seller.user.first_name}, {self.price}"

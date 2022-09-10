@@ -127,6 +127,7 @@ class CommentDoctorSerializer(serializers.ModelSerializer):
     class Meta:
         model = CommentDoctor
         fields = "__all__"
+        lookup_field = "title"
 
 
 class DoctorUpdateSerializer(serializers.ModelSerializer):
@@ -187,13 +188,14 @@ class DoctorUpdateSerializer(serializers.ModelSerializer):
             doctor.save()
             return doctor
 
-
         def create(self, validated_data):
-            print('TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT')
+            print("TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT")
             print(validated_data)
 
         def update(self, instance, validated_data):
-            print('UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU')
+            print(
+                "UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU"
+            )
             instance.user.first_name = validated_data.get(
                 "first_name", instance.user.first_name
             )
