@@ -1,5 +1,7 @@
 from django.db.models import Prefetch
+from django.http import HttpResponse
 from rest_framework import generics, status
+from rest_framework.exceptions import NotFound
 from rest_framework.permissions import IsAdminUser
 from rest_framework.response import Response
 
@@ -85,7 +87,8 @@ class CurrentDoctorListAPIView(generics.ListAPIView):
 
     def get_queryset(self):
         email = self.kwargs.get("email")
-        return Doctor.objects.select_related("user").prefetch_related("user__doctor_timetable").filter(user__email=email)
+        return Doctor.objects.select_related("user").prefetch_related("user__doctor_timetable").filter(
+            user__email=email)
         # return Doctor.objects.filter(user__email=email)
 
 
@@ -99,24 +102,45 @@ class UpdateDoctorAPIView(generics.RetrieveUpdateAPIView):
     serializer_class = DoctorUpdateSerializer
     lookup_url_kwarg = "email"
 
-    def get_queryset(self):
-        email = self.kwargs.get(self.lookup_url_kwarg)
-        if not email:
-            return Doctor.objects.all()
-        return Doctor.objects.filter(user__email=email)
+    # def get_queryset(self):
+    #     email = self.kwargs.get(self.lookup_url_kwarg)
+    #     if not email:
+    #         return Doctor.objects.all()
+    #     return Doctor.objects.filter(user__email=email)
 
-    def update(self, request, *args, **kwargs):
-        serializer = DoctorUpdateSerializer(data=request.data)
-        print("PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPp")
-        print(request.data)
-        if serializer.is_valid():
-            print(
-                "OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO"
-            )
-            print(serializer)
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    def get_object(self):
+        print('KKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKK')
+        email = self.kwargs.get(self.lookup_url_kwarg)
+        instance = Doctor.objects.filter(user__email=email).first()
+        if not instance:
+            raise NotFound
+        return instance
+
+    def put(self, request, *args, **kwargs):
+        # doctor = self.get_object()
+        print('YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY')
+        # doctor = self.get_object()
+        doctor = Doctor.objects.select_related('user').get(user__email=kwargs.get('email', None))
+        serializer = DoctorUpdateSerializer(instance=doctor, data=request.data)
+        print('AAAAAAAAAAAAa')
+        serializer.is_valid(raise_exception=True)
+        # serializer.save()
+        self.perform_update(serializer)
+        print(serializer.data)
+        return Response({"post": serializer.data})
+    #     # print("PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPp")
+    #     # if serializer.is_valid():
+    #     #     print(
+    #     #         "OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO"
+    #     #     )
+    #     #     serializer.save()
+    #     #     return Response(serializer.data)
+    #     # return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    #     # print(serializer.errors)
+    #     # print(')))))))))))))))))))))))))))))))))))))))))))))))))))))')
+    #     # # self.perform_update(serializer)
+    #     # print(serializer.data)
+    #     # return HttpResponse('hi')
 
 
 class DoctorsListAPIView(generics.ListAPIView):
