@@ -85,7 +85,7 @@ class CurrentDoctorListAPIView(generics.ListAPIView):
 
     def get_queryset(self):
         email = self.kwargs.get("email")
-        return Doctor.objects.select_related("user").filter(user__email=email)
+        return Doctor.objects.select_related("user").prefetch_related("user__doctor_timetable").filter(user__email=email)
         # return Doctor.objects.filter(user__email=email)
 
 

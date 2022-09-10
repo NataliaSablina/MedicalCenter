@@ -11,7 +11,7 @@ class TestDoctorsModel(TestCase):
         call_command("loaddata", "fixtures/fixtures.json", verbosity=0)
 
     def test_str_doctors_category(self):
-        category1 = DoctorsCategory.objects.get(name='category3')
+        category1 = DoctorsCategory.objects.get(name="category3")
         expected_data = category1.name
         self.assertEqual(expected_data, str(category1))
 
@@ -21,6 +21,6 @@ class TestDoctorsModel(TestCase):
         self.assertEqual(expected_data, str(doctor))
 
     def test_str_comment_doctor(self):
-        comment = CommentDoctor.objects.get(title='doctor1comment1')
+        comment = CommentDoctor.objects.get(title="doctor1comment1")
         expected_data = comment.title
         self.assertEqual(expected_data, str(comment))
