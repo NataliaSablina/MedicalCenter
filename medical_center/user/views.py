@@ -1,12 +1,16 @@
 from rest_framework import status, generics
+from rest_framework.exceptions import NotFound
 from rest_framework.generics import CreateAPIView
 from rest_framework.permissions import IsAdminUser
 from rest_framework.response import Response
 from user.models import MyUser
+from user.permissions import IsOwnerOrAdminOrReadOnly
 from user.serializers import (
     RegistrationSerializer,
     UserSerializer,
     RegistrationSuperUserSerializer,
+    UserUpdateSerializer,
+    SuperUserUpdateSerializer,
 )
 
 
@@ -38,6 +42,64 @@ class RegistrationSuperUserAPIView(generics.CreateAPIView):
     queryset = MyUser.objects.all()
     serializer_class = RegistrationSuperUserSerializer
     permission_classes = [IsAdminUser]
+
+
+class UpdateUserAPIView(generics.RetrieveUpdateAPIView):
+    queryset = MyUser.objects.all()
+    serializer_class = UserUpdateSerializer
+    lookup_url_kwarg = "email"
+    permission_classes = [IsOwnerOrAdminOrReadOnly]
+
+    def get_object(self):
+        email = self.kwargs.get(self.lookup_url_kwarg)
+        instance = MyUser.objects.filter(email=email).first()
+        if not instance:
+            raise NotFound
+        return instance
+
+    def put(self, request, *args, **kwargs):
+        user = MyUser.objects.get(email=kwargs.get("email", None))
+        serializer = UserUpdateSerializer(instance=user, data=request.data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+        serializer.save()
+        return Response({"post": serializer.data})
+
+
+class UpdateSuperUserAPIView(generics.RetrieveUpdateAPIView):
+    """Can make superuser from usual user"""
+
+    queryset = MyUser.objects.all()
+    serializer_class = SuperUserUpdateSerializer
+    lookup_url_kwarg = "email"
+    permission_classes = [IsAdminUser]
+
+    def get_object(self):
+        email = self.kwargs.get(self.lookup_url_kwarg)
+        instance = MyUser.objects.filter(email=email).first()
+        if not instance:
+            raise NotFound
+        return instance
+
+    def put(self, request, *args, **kwargs):
+        user = MyUser.objects.get(email=kwargs.get("email", None))
+        serializer = SuperUserUpdateSerializer(instance=user, data=request.data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+        serializer.save()
+        return Response({"post": serializer.data})
+
+
+class DeleteUserAPIView(generics.RetrieveDestroyAPIView):
+    queryset = MyUser.objects.all()
+    serializer_class = UserSerializer
+    lookup_url_kwarg = "email"
+
+    def get_object(self):
+        email = self.kwargs.get("email")
+        if email is None or email is "":
+            return NotFound
+        return MyUser.objects.filter(email=email).first()
 
 
 # class UserPageView(View):

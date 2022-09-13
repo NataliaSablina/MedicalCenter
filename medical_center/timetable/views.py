@@ -16,7 +16,7 @@ class ListTimeTableAPIView(generics.ListAPIView):
     permission_classes = [IsAdminAndDoctorOrReadOnly]
 
     def get_queryset(self):
-        return TimeTable.objects.select_related("user")
+        return TimeTable.objects.all()
 
 
 class UpdateTimeTableAPIView(generics.RetrieveUpdateDestroyAPIView):

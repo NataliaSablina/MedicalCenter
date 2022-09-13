@@ -1,14 +1,17 @@
 from django.db.models import Prefetch
 from rest_framework import generics
+from rest_framework.exceptions import NotFound
 from rest_framework.permissions import IsAdminUser
+from rest_framework.response import Response
 
 from seller.models import Seller, CommentSeller
+from seller.permissions import IsOwnerSellerOrAdminOrReadOnly
 from seller.serializers import (
     SellerSerializer,
     RegistrationSellerSerializer,
     CommentSellerSerializer,
+    SellerUpdateSerializer,
 )
-from user.models import MyUser
 
 
 class SellerListAPIView(generics.ListAPIView):
@@ -54,3 +57,32 @@ class SellerCommentListAPIView(generics.ListAPIView):
         if not email:
             return CommentSeller.objects.all()
         return CommentSeller.objects.filter(seller__user__email=email)
+
+
+class UpdateSellerAPIView(generics.RetrieveUpdateAPIView):
+    queryset = Seller.objects.all()
+    serializer_class = SellerUpdateSerializer
+    lookup_url_kwarg = "email"
+    permission_classes = [IsOwnerSellerOrAdminOrReadOnly]
+
+    def get_object(self):
+        email = self.kwargs.get(self.lookup_url_kwarg)
+        instance = (
+            Seller.objects.select_related("user")
+            .prefetch_related("timetable")
+            .filter(user__email=email)
+            .first()
+        )
+        if not instance:
+            raise NotFound
+        return instance
+
+    def put(self, request, *args, **kwargs):
+        seller = Seller.objects.select_related("user").get(
+            user__email=kwargs.get("email", None)
+        )
+        serializer = SellerUpdateSerializer(instance=seller, data=request.data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+        serializer.save()
+        return Response({"post": serializer.data})

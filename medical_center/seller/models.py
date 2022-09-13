@@ -1,5 +1,7 @@
 from django.contrib.auth.base_user import BaseUserManager
 from django.db import models
+
+from timetable.models import TimeTable
 from user.models import MyUser
 
 
@@ -7,6 +9,9 @@ class Seller(models.Model):
     user = models.OneToOneField(MyUser, on_delete=models.CASCADE, verbose_name="user")
     work_experience = models.CharField(verbose_name="work_experience", max_length=250)
     age = models.IntegerField(verbose_name="age")
+    timetable = models.ForeignKey(
+        TimeTable, on_delete=models.SET_NULL, null=True, verbose_name="timetable"
+    )
     is_seller = models.BooleanField(default=True)
 
     class Meta:

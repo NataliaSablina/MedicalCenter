@@ -6,6 +6,7 @@ from rest_framework.permissions import IsAdminUser
 from rest_framework.response import Response
 
 from doctors.models import DoctorsCategory, Doctor, CommentDoctor
+from doctors.permissions import IsOwnerDoctorOrAdminOrReadOnly
 from doctors.serializers import (
     DoctorsCategorySerializer,
     DoctorSerializer,
@@ -49,11 +50,9 @@ class UpdateCommentDoctorAPIView(generics.RetrieveUpdateDestroyAPIView):
 
     def get_object(self):
         title = self.kwargs.get("title")
-        print(title)
         instance = (
             CommentDoctor.objects.select_related("user").filter(title=title).first()
         )
-        print(instance)
         if not instance:
             raise NotFound
         return instance
@@ -115,6 +114,7 @@ class UpdateDoctorAPIView(generics.RetrieveUpdateAPIView):
     queryset = Doctor.objects.all()
     serializer_class = DoctorUpdateSerializer
     lookup_url_kwarg = "email"
+    permission_classes = [IsOwnerDoctorOrAdminOrReadOnly]
 
     def get_object(self):
         email = self.kwargs.get(self.lookup_url_kwarg)

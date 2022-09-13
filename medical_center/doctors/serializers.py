@@ -156,7 +156,6 @@ class UserSerializer(serializers.ModelSerializer):
             "creation_date",
             "is_active",
             "is_admin",
-            "photo",
         ]
 
     def update(self, instance, validated_data):
@@ -168,6 +167,7 @@ class UserSerializer(serializers.ModelSerializer):
         user.sex = user_data.get("sex", user.sex)
         user.phone_number = user_data.get("phone_number", user.phone_number)
         user.date_of_birth = user_data.get("date_of_birth", user.date_of_birth)
+        user.photo = user_data.get("photo", user.photo)
         user.save()
         return user
 

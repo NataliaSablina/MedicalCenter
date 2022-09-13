@@ -6,6 +6,7 @@ from seller.views import (
     CreateCommentSellerAPIView,
     UpdateCommentSellerAPIView,
     SellerCommentListAPIView,
+    UpdateSellerAPIView,
 )
 
 urlpatterns = [
@@ -26,5 +27,10 @@ urlpatterns = [
         "comments_seller/<str:email>/",
         SellerCommentListAPIView.as_view(),
         name="comments_seller",
+    ),
+    path(
+        "update_seller/<str:email>/",
+        UpdateSellerAPIView.as_view(),
+        name="update_seller",
     ),
 ]
