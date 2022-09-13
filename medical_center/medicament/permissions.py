@@ -15,3 +15,11 @@ class IsAdminAndSellerOrReadOnly(permissions.BasePermission):
                 return request.user and seller.is_seller
             except:
                 return False
+
+
+class IsOwnerSellerOrAdminOrReadOnly(permissions.BasePermission):
+    def has_object_permission(self, request, view, obj):
+        if request.method in permissions.SAFE_METHODS:
+            return True
+
+        return obj.seller.user.email == request.user.email or request.user.is_staff

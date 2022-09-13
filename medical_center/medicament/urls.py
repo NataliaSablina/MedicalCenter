@@ -8,6 +8,11 @@ from medicament.views import (
     MedicamentListAPIView,
     CreateMedicamentAPIView,
     UpdateMedicamentAPIView,
+    CreateMedicamentCommentAPIView,
+    UpdateDeleteMedicamentCommentAPIView,
+    CurrentMedicamentCommentsAPIListView,
+    CreateMedicamentSellerRelationsAPIView,
+    UpdateDeleteMedicamentSellerRelationsAPIView,
 )
 
 urlpatterns = [
@@ -50,5 +55,30 @@ urlpatterns = [
         "update_medicament/<str:title>/",
         UpdateMedicamentAPIView.as_view(),
         name="update_medicament",
+    ),
+    path(
+        "create_comment_medicament/",
+        CreateMedicamentCommentAPIView.as_view(),
+        name="create_comment_medicament",
+    ),
+    path(
+        "update_delete_comment_medicament/<str:title>/",
+        UpdateDeleteMedicamentCommentAPIView.as_view(),
+        name="update_delete_comment_medicament",
+    ),
+    path(
+        "current_medicament_comments/<str:title>/",
+        CurrentMedicamentCommentsAPIListView.as_view(),
+        name="current_medicament_comments",
+    ),
+    path(
+        "create_medicament_seller_relations/",
+        CreateMedicamentSellerRelationsAPIView.as_view(),
+        name="create_medicament_seller_relations",
+    ),
+    path(
+        "update_delete_medicament_seller_relations/<str:title>/",
+        UpdateDeleteMedicamentSellerRelationsAPIView.as_view(),
+        name="update_delete_medicament_seller_relations",
     ),
 ]

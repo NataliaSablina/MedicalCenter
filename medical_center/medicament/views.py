@@ -1,18 +1,28 @@
-from django.shortcuts import render
 from rest_framework import status, generics
+from rest_framework.exceptions import NotFound
 from rest_framework.filters import SearchFilter
 from rest_framework.permissions import IsAdminUser
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from django_filters.rest_framework import DjangoFilterBackend
-from medicament.models import MedicamentCategory, Medicament, MedicamentSellerRelations
-from medicament.permissions import IsAdminAndSellerOrReadOnly
+from medicament.models import (
+    MedicamentCategory,
+    Medicament,
+    MedicamentSellerRelations,
+    CommentMedicament,
+)
+from medicament.permissions import (
+    IsAdminAndSellerOrReadOnly,
+    IsOwnerSellerOrAdminOrReadOnly,
+)
 from medicament.serializers import (
     MedicamentCategorySerializer,
-    MedicamentCategoryModelSerializer,
     MedicamentSerializer,
     OnlyMedicamentSerializer,
+    MedicamentCommentSerializer,
+    MedicamentSellerRelationsSerializer,
 )
+from user.permissions import IsOwnerOrAdminOrReadOnly
 
 
 class MedicamentCategoryListView(APIView):
@@ -102,5 +112,52 @@ class UpdateMedicamentAPIView(generics.RetrieveUpdateDestroyAPIView):
     def get_queryset(self):
         title = self.kwargs.get("title")
         if not title:
-            return Medicament.objects.all()
+            return NotFound
         return Medicament.objects.get(title=title)
+
+
+class CreateMedicamentCommentAPIView(generics.CreateAPIView):
+    queryset = CommentMedicament.objects.all()
+    serializer_class = MedicamentCommentSerializer
+
+
+class UpdateDeleteMedicamentCommentAPIView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = CommentMedicament.objects.all()
+    serializer_class = MedicamentCommentSerializer
+    permission_classes = [IsAdminUser]
+
+    def get_object(self):
+        title = self.kwargs.get("title")
+        if not title:
+            return NotFound
+        return CommentMedicament.objects.filter(title=title).first()
+
+
+class CurrentMedicamentCommentsAPIListView(generics.ListAPIView):
+    serializer_class = MedicamentCommentSerializer
+
+    def get_queryset(self):
+        title = self.kwargs.get("title")
+        if not title:
+            return NotFound
+        return CommentMedicament.objects.filter(medicament__title=title)
+
+
+class CreateMedicamentSellerRelationsAPIView(generics.CreateAPIView):
+    queryset = MedicamentSellerRelations.objects.all()
+    serializer_class = MedicamentSellerRelationsSerializer
+    permission_classes = [IsAdminAndSellerOrReadOnly]
+
+
+class UpdateDeleteMedicamentSellerRelationsAPIView(
+    generics.RetrieveUpdateDestroyAPIView
+):
+    queryset = MedicamentSellerRelations.objects.all()
+    serializer_class = MedicamentSellerRelationsSerializer
+    permission_classes = [IsOwnerSellerOrAdminOrReadOnly]
+
+    def get_object(self):
+        title = self.kwargs.get("title")
+        if not title:
+            return NotFound
+        return MedicamentSellerRelations.objects.filter(title=title).first()

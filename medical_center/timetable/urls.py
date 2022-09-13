@@ -3,7 +3,7 @@ from django.urls import path, include
 from timetable.views import (
     CreateTimeTableAPIView,
     ListTimeTableAPIView,
-    UpdateTimeTableAPIView,
+    UpdateDeleteTimeTableAPIView,
 )
 
 urlpatterns = [
@@ -12,8 +12,8 @@ urlpatterns = [
     ),
     path("timetable_view/", ListTimeTableAPIView.as_view(), name="timetable_view"),
     path(
-        "timetable_update/<str:name>/",
-        UpdateTimeTableAPIView.as_view(),
-        name="timetable_update",
+        "timetable_update_delete/<str:name>/",
+        UpdateDeleteTimeTableAPIView.as_view(),
+        name="timetable_update_delete",
     ),
 ]

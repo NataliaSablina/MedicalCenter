@@ -1,6 +1,11 @@
 from rest_framework import serializers
 
-from medicament.models import MedicamentCategory, Medicament, MedicamentSellerRelations
+from medicament.models import (
+    MedicamentCategory,
+    Medicament,
+    MedicamentSellerRelations,
+    CommentMedicament,
+)
 
 
 class MedicamentCategoryModelSerializer(serializers.ModelSerializer):
@@ -62,4 +67,16 @@ class MedicamentSerializer(serializers.ModelSerializer):
 class OnlyMedicamentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Medicament
+        fields = "__all__"
+
+
+class MedicamentCommentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CommentMedicament
+        fields = "__all__"
+
+
+class MedicamentSellerRelationsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = MedicamentSellerRelations
         fields = "__all__"

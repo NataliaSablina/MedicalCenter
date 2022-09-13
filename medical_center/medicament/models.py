@@ -35,8 +35,13 @@ class Medicament(models.Model):
 
 
 class CommentMedicament(models.Model):
+    title = models.CharField(max_length=70, unique=True, null=True)
+
     user = models.ForeignKey(
         MyUser, on_delete=models.SET_NULL, verbose_name="user", null=True
+    )
+    medicament = models.ForeignKey(
+        Medicament, on_delete=models.CASCADE, verbose_name="medicament", null=True
     )
     content = models.TextField(verbose_name="content")
     creation_date = models.DateField(
@@ -50,7 +55,7 @@ class CommentMedicament(models.Model):
         default_related_name = "comment_medicament"
 
     def __str__(self):
-        return self.pk, self.content[:20]
+        return self.title
 
 
 class MedicamentSellerRelations(models.Model):
@@ -64,6 +69,7 @@ class MedicamentSellerRelations(models.Model):
     medicament = models.ForeignKey(
         Medicament, on_delete=models.CASCADE, verbose_name="medicament"
     )
+    title = models.CharField(max_length=250, null=True, verbose_name="title")
 
     class Meta:
         verbose_name = "MedicamentSellerRelations"

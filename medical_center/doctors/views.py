@@ -1,6 +1,4 @@
-from django.db.models import Prefetch
-from django.http import HttpResponse
-from rest_framework import generics, status
+from rest_framework import generics
 from rest_framework.exceptions import NotFound
 from rest_framework.permissions import IsAdminUser
 from rest_framework.response import Response
@@ -101,7 +99,6 @@ class CurrentDoctorListAPIView(generics.ListAPIView):
             .prefetch_related("timetable")
             .filter(user__email=email)
         )
-        # return Doctor.objects.filter(user__email=email)
 
 
 class RegistrationDoctorAPIView(generics.CreateAPIView):

@@ -1,8 +1,9 @@
 from rest_framework import permissions
 from doctors.models import Doctor
+from seller.models import Seller
 
 
-class IsAdminAndDoctorOrReadOnly(permissions.BasePermission):
+class IsAdminDoctorSellerOrReadOnly(permissions.BasePermission):
     def has_permission(self, request, view):
         if request.method in permissions.SAFE_METHODS:
             return True
@@ -13,4 +14,8 @@ class IsAdminAndDoctorOrReadOnly(permissions.BasePermission):
                 doctor = Doctor.objects.get(user=request.user)
                 return request.user and doctor.is_doctor
             except:
-                return False
+                try:
+                    seller = Seller.objects.get(user=request.user)
+                    return request.user and seller.is_seller
+                except:
+                    return False
