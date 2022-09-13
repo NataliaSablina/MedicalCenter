@@ -1,14 +1,7 @@
-from django.contrib.auth.mixins import LoginRequiredMixin
-from django.core.mail import send_mail, BadHeaderError
-from django.shortcuts import render, redirect
-from django.contrib import messages
-from django.views import View
 from rest_framework import status, generics
 from rest_framework.generics import CreateAPIView
 from rest_framework.permissions import IsAdminUser
 from rest_framework.response import Response
-from medical_center import settings
-from user.forms import HelpUserForm
 from user.models import MyUser
 from user.serializers import (
     RegistrationSerializer,

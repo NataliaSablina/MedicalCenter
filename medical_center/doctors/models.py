@@ -1,4 +1,6 @@
 from django.db import models
+
+from timetable.models import TimeTable
 from user.models import phone_regex, MyUser
 
 
@@ -25,6 +27,9 @@ class Doctor(models.Model):
         verbose_name="education", max_length=250, default="BSU"
     )
     age = models.IntegerField(verbose_name="age", default=30)
+    timetable = models.ForeignKey(
+        TimeTable, on_delete=models.SET_NULL, verbose_name="timetable", null=True
+    )
     is_doctor = models.BooleanField(default=True)
 
     class Meta:

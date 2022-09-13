@@ -3,6 +3,7 @@ from rest_framework.response import Response
 
 from doctors.models import DoctorsCategory, Doctor, CommentDoctor
 from timetable.models import TimeTable
+from timetable.serializers import TimeTableSerializer
 from user.models import MyUser
 
 
@@ -13,14 +14,13 @@ class DoctorsCategorySerializer(serializers.ModelSerializer):
         model = DoctorsCategory
         fields = "__all__"
 
-    def create(self, validated_data):
-        return DoctorsCategory.objects.create(**validated_data)
-
-    def update(self, instance, validated_data):
-        print('GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG')
-        instance.name = validated_data.get("name", self.create(validated_data))
-        instance.save()
-        return instance
+    # def create(self, validated_data):
+    #     return DoctorsCategory.objects.create(**validated_data)
+    #
+    # def update(self, instance, validated_data):
+    #     instance.name = validated_data.get("name", self.create(validated_data))
+    #     instance.save()
+    #     return instance
 
 
 class DoctorSerializer(serializers.ModelSerializer):
@@ -55,11 +55,8 @@ class DoctorSerializer(serializers.ModelSerializer):
         return instance.user.sex
 
     def get_timetable(self, instance):
-        try:
-            timetable = TimeTable.objects.get(user=instance.user)
-            print(timetable.monday)
-
-        except Exception:
+        timetable = instance.timetable
+        if timetable is None:
             return "doctor doesn't have timetable"
         else:
             print(timetable.monday)
@@ -102,6 +99,7 @@ class RegistrationDoctorSerializer(serializers.ModelSerializer):
             "work_experience",
             "age",
             "education",
+            "timetable",
             "password1",
             "password2",
         )
@@ -118,7 +116,7 @@ class RegistrationDoctorSerializer(serializers.ModelSerializer):
         password1 = self.validated_data.get("password1")
         password2 = self.validated_data.get("password2")
         if password1 != password2:
-            raise serializers.ValidationError({password1: "Пароль не совпадает"})
+            raise serializers.ValidationError({password1: "password1 != password2"})
         user.set_password(password1)
         user.save()
         doctor = Doctor.objects.create(
@@ -127,6 +125,7 @@ class RegistrationDoctorSerializer(serializers.ModelSerializer):
             work_experience=self.validated_data.get("work_experience"),
             age=self.validated_data.get("age"),
             education=self.validated_data.get("education"),
+            timetable=self.validated_data.get("timetable"),
         )
         doctor.save()
         return doctor
@@ -151,29 +150,26 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = MyUser
-        exclude = ['password', 'last_login', 'creation_date',
-                   'is_active', 'is_admin', 'photo']
+        exclude = [
+            "password",
+            "last_login",
+            "creation_date",
+            "is_active",
+            "is_admin",
+            "photo",
+        ]
 
-    # def update(self, instance, validated_data):
-    #     print('GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG')
-    #     user = instance
-    #     user_data = validated_data
-    #     user.first_name = user_data.get(
-    #         "first_name", user.first_name
-    #     )
-    #     user.second_name = user_data.get(
-    #         "second_name", user.second_name
-    #     )
-    #     user.email = user_data.get("email", user.email)
-    #     user.sex = user_data.get("sex", user.sex)
-    #     user.phone_number = user_data.get(
-    #         "phone_number", user.phone_number
-    #     )
-    #     user.date_of_birth = user_data.get(
-    #         "date_of_birth", user.date_of_birth
-    #     )
-    #     user.save()
-    #     return user
+    def update(self, instance, validated_data):
+        user = instance
+        user_data = validated_data
+        user.first_name = user_data.get("first_name", user.first_name)
+        user.second_name = user_data.get("second_name", user.second_name)
+        user.email = user_data.get("email", user.email)
+        user.sex = user_data.get("sex", user.sex)
+        user.phone_number = user_data.get("phone_number", user.phone_number)
+        user.date_of_birth = user_data.get("date_of_birth", user.date_of_birth)
+        user.save()
+        return user
 
 
 class DoctorUpdateSerializer(serializers.ModelSerializer):
@@ -181,65 +177,36 @@ class DoctorUpdateSerializer(serializers.ModelSerializer):
     work_experience = serializers.CharField()
     age = serializers.IntegerField()
     education = serializers.CharField()
-    # category = DoctorsCategorySerializer()
 
     class Meta:
         model = Doctor
-        fields = '__all__'
-        # fields = ('user', 'work_experience', 'age', 'education')
+        fields = (
+            "id",
+            "user",
+            "work_experience",
+            "age",
+            "education",
+            "category",
+            "timetable",
+        )
 
     def update(self, instance, validated_data):
-        print('PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP')
-        # user_data = validated_data.pop('user')
-        # user_instance = instance.user
+        user = MyUser.objects.get(email=instance.user.email)
+        user_data = validated_data.get("user")
+        user_serializer = UserSerializer(user, data=user_data)
+        user_serializer.is_valid(raise_exception=True)
+        user_serializer.save()
         instance.age = validated_data.get("age", instance.age)
         instance.education = validated_data.get("education", instance.education)
         instance.work_experience = validated_data.get(
-                "work_experience", instance.work_experience
-            )
-        # instance.category = validated_data.get("category", instance.category)
-        print(type(instance.category))
-        doctor_cat = instance.category
-        category = DoctorsCategory.objects.get(name=doctor_cat.name)
-        print(category)
-        print(type(category))
-        # category_serializer = DoctorsCategorySerializer(doctor_cat,
-        #                                               data=validated_data.get('category'), partial=True)
-        # category_serializer.is_valid(raise_exception=True)
-        # # serializer.save()
-        # category_serializer.save()
-        # instance.category = validated_data.get("category", instance.category)
+            "work_experience", instance.work_experience
+        )
+        category_data = validated_data.get("category")
+        category = DoctorsCategory.objects.get(name=category_data)
+        instance.category = category
+        timetable_data = validated_data.get("timetable")
+        timetable = TimeTable.objects.get(name=timetable_data)
+        instance.timetable = timetable
         instance.save()
 
         return instance
-
-    # def update(self, instance, validated_data):
-    #     print("UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU")
-    #     user = validated_data.pop('user')
-    #     instance.user.first_name = validated_data.get(
-    #         "first_name", instance.user.first_name
-    #     )
-    #     instance.user.second_name = validated_data.get(
-    #         "second_name", instance.user.second_name
-    #     )
-    #     instance.user.email = validated_data.get("email", instance.user.email)
-    #     instance.user.sex = validated_data.get("sex", instance.user.sex)
-    #     instance.user.phone_number = validated_data.get(
-    #         "phone_number", instance.user.phone_number
-    #     )
-    #     instance.user.date_of_birth = validated_data.get(
-    #         "date_of_birth", instance.user.date_of_birth
-    #     )
-    #     instance.age = validated_data.get("age", instance.age)
-    #     instance.education = validated_data.get("education", instance.education)
-    #     instance.work_experience = validated_data.get(
-    #         "work_experience", instance.work_experience
-    #     )
-    #     instance.category = validated_data.get("category", instance.category)
-    #
-    #     instance.save()
-    #     return instance
-    #
-    #
-    #
-    #
