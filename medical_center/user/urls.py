@@ -5,7 +5,7 @@ from user.views import (
     RegistrationSuperUserAPIView,
     UpdateUserAPIView,
     UpdateSuperUserAPIView,
-    DeleteUserAPIView,
+    DeleteUserAPIView, HelpUserView,
 )
 from rest_framework import routers
 
@@ -26,5 +26,5 @@ urlpatterns = [
     ),
     path("delete_user/<str:email>/", DeleteUserAPIView.as_view(), name="delete_user"),
     # path('user_page/<str:email>', UserPageView.as_view(), name='user_page'),
-    # path('help', HelpUserView.as_view(), name='help'),
+    path('help/', HelpUserView.as_view(), name='help'),
 ]

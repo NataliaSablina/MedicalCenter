@@ -1,8 +1,17 @@
+from django.contrib import messages
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.mail import send_mail
+from django.http import BadHeaderError
+from django.shortcuts import redirect, render
+from django.views import View
 from rest_framework import status, generics
 from rest_framework.exceptions import NotFound
 from rest_framework.generics import CreateAPIView
 from rest_framework.permissions import IsAdminUser
 from rest_framework.response import Response
+
+from medical_center import settings
+from user.forms import HelpUserForm
 from user.models import MyUser
 from user.permissions import IsOwnerOrAdminOrReadOnly
 from user.serializers import (
@@ -111,36 +120,42 @@ class DeleteUserAPIView(generics.RetrieveDestroyAPIView):
 #         return render(request, "user/user_page.html", context)
 #
 #
-# class HelpUserView(LoginRequiredMixin, View):
-#     login_url = "authentication"
-#
-#     def get(self, request):
-#         help_user_form = HelpUserForm()
-#         context = {
-#             "form": help_user_form,
-#         }
-#         return render(request, "user/help_user_form.html", context)
-#
-#     def post(self, request):
-#         help_user_form = HelpUserForm(request.POST)
-#         if help_user_form.is_valid():
-#             subject = "Help for client"
-#             from_email = help_user_form.cleaned_data["email"]
-#             message = help_user_form.cleaned_data["message"]
-#             if from_email == request.user.email:
-#                 try:
-#                     send_mail(
-#                         subject,
-#                         message,
-#                         from_email,
-#                         [settings.EMAIL_HOST_USER],
-#                         fail_silently=False,
-#                     )
-#                     messages.error(request, "Mail is sent successful")
-#                 except BadHeaderError:
-#                     messages.error(request, "Send email wrong")
-#                     return redirect("help")
-#                 return redirect("home_page")
-#             else:
-#                 messages.error(request, "Your email is wrong")
-#         return redirect("help")
+
+class HomePageView(View):
+    def get(self, request):
+        return render(request, "user/home_page.html")
+
+
+class HelpUserView(LoginRequiredMixin, View):
+    login_url = "authentication"
+
+    def get(self, request):
+        help_user_form = HelpUserForm()
+        context = {
+            "form": help_user_form,
+        }
+        return render(request, "user/help_user_form.html", context)
+
+    def post(self, request):
+        help_user_form = HelpUserForm(request.POST)
+        if help_user_form.is_valid():
+            subject = "Help for client"
+            from_email = help_user_form.cleaned_data["email"]
+            message = help_user_form.cleaned_data["message"]
+            if from_email == request.user.email:
+                try:
+                    send_mail(
+                        subject,
+                        message,
+                        from_email,
+                        [settings.EMAIL_HOST_USER],
+                        fail_silently=False,
+                    )
+                    messages.error(request, "Mail is sent successful")
+                except BadHeaderError:
+                    messages.error(request, "Send email wrong")
+                    return redirect("help")
+                return redirect("home_page")
+            else:
+                messages.error(request, "Your email is wrong")
+        return redirect("help")
